@@ -68,6 +68,36 @@
             text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
         }
         
+        /* Connection Status */
+        .status-bar {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .status-connecting {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #FFC107;
+            color: #FFC107;
+        }
+        
+        .status-connected {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+        
+        .status-error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+        }
+        
         /* UID Display Box */
         .uid-box {
             background: rgba(0, 10, 30, 0.8);
@@ -197,6 +227,13 @@
         
         .btn:active {
             transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .btn-secondary {
@@ -388,18 +425,18 @@
         /* Notification */
         .notification {
             position: fixed;
-            top: 20px;
+            top: 60px;
             right: 20px;
             background: rgba(0, 20, 40, 0.95);
             border: 1px solid #00D4FF;
             border-radius: 10px;
             padding: 15px 20px;
-            color: #            padding: 15px 20px;
             color: #00D4FF;
             transform: translateX(400px);
             transition: transform 0.3s ease;
             z-index: 1000;
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            max-width: 300px;
         }
         
         .notification.show {
@@ -415,9 +452,29 @@
             border-color: #ff6b6b;
             color: #ff6b6b;
         }
+        
+        /* Error Message */
+        .error-box {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #ff6b6b;
+            display: none;
+        }
+        
+        .error-box.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <!-- Connection Status -->
+    <div id="statusBar" class="status-bar status-connecting">
+        🔄 Connecting...
+    </div>
+    
     <!-- Matrix Background -->
     <canvas id="matrixCanvas" class="matrix-bg"></canvas>
     
@@ -427,6 +484,9 @@
             <h1>⚡ ELITE ADMIN PANEL</h1>
             <div class="subtitle">[ CONSENT-BASED ANALYTICS SYSTEM ]</div>
         </div>
+        
+        <!-- Error Box -->
+        <div id="errorBox" class="error-box"></div>
         
         <!-- UID Display -->
         <div class="uid-box">
@@ -479,7 +539,7 @@
             <div class="card-title">📋 My Generated Links</div>
             <div class="links-list" id="linksList">
                 <div style="text-align: center; color: rgba(255,215,0,0.5); padding: 30px;">
-                    No links generated yet...
+                    Loading...
                 </div>
             </div>
         </div>
@@ -513,12 +573,6 @@
     </div>
     
     <!-- Notification -->
-    <div Analytics & Consent-Based Media System
-            </div>
-        </div>
-    </div>
-    
-    <!-- Notification -->
     <div class="notification" id="notification"></div>
 
     <script>
@@ -534,14 +588,12 @@
             measurementId: "G-BS81ZN7BDD"
         };
         
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        
-        // ========== GLOBAL VARIABLES ==========
+        // Global variables
+        let database;
         let currentUID = null;
         let selectedFeatures = new Set(['basic']);
         let generatedLinkURL = '';
+        let isFirebaseReady = false;
         
         // ========== MATRIX BACKGROUND ==========
         (function matrixRain() {
@@ -584,7 +636,45 @@
             });
         })();
         
-        // ========== UID GENERATION & MANAGEMENT ==========
+        // ========== INITIALIZE FIREBASE ==========
+        function initFirebase() {
+            try {
+                firebase.initializeApp(firebaseConfig);
+                database = firebase.database();
+                
+                // Test connection
+                database.ref('.info/connected').on('value', (snap) => {
+                    if (snap.val() === true) {
+                        updateStatus('connected', '✅ Connected');
+                        isFirebaseReady = true;
+                        initializeUID();
+                    } else {
+                        updateStatus('connecting', '🔄 Connecting...');
+                    }
+                });
+                
+            } catch(error) {
+                console.error('Firebase init error:', error);
+                updateStatus('error', '❌ Connection Failed');
+                showError('Firebase initialization failed: ' + error.message);
+            }
+        }
+        
+        // ========== STATUS & ERROR HANDLING ==========
+        function updateStatus(status, message) {
+            const statusBar = document.getElementById('statusBar');
+            statusBar.className = 'status-bar status-' + status;
+            statusBar.textContent = message;
+        }
+        
+        function showError(message) {
+            const errorBox = document.getElementById('errorBox');
+            errorBox.textContent = '⚠️ ' + message;
+            errorBox.classList.add('show');
+            document.getElementById('uidDisplay').textContent = 'ERROR';
+        }
+        
+        // ========== UID GENERATION ==========
         function generateUID() {
             const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             let uid = '';
@@ -595,42 +685,52 @@
         }
         
         async function initializeUID() {
-            // Check localStorage first
-            let savedUID = localStorage.getItem('eliteAdminUID');
-            
-            if(!savedUID) {
-                // Generate new UID
-                savedUID = generateUID();
-                localStorage.setItem('eliteAdminUID', savedUID);
+            try {
+                // Check localStorage
+                let savedUID = localStorage.getItem('eliteAdminUID');
                 
-                // Save to Firebase
-                const adminRef = database.ref('admins/' + savedUID);
-                await adminRef.set({
-                    createdAt: firebase.database.ServerValue.TIMESTAMP,
-                    lastActive: firebase.database.ServerValue.TIMESTAMP,
-                    totalLinks: 0,
-                    totalClicks: 0
-                });
+                if(!savedUID) {
+                    // Generate new UID
+                    savedUID = generateUID();
+                    localStorage.setItem('eliteAdminUID', savedUID);
+                    
+                    // Save to Firebase with retry
+                    let retries = 3;
+                    while(retries > 0) {
+                        try {
+                            await database.ref('admins/' + savedUID).set({
+                                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                                lastActive: firebase.database.ServerValue.TIMESTAMP,
+                                totalLinks: 0,
+                                totalClicks: 0
+                            });
+                            break;
+                        } catch(e) {
+                            retries--;
+                            if(retries === 0) throw e;
+                            await new Promise(r => setTimeout(r, 1000));
+                        }
+                    }
+                    
+                    showNotification('✨ New Admin UID Generated!', 'success');
+                } else {
+                    // Update last active
+                    await database.ref('admins/' + savedUID + '/lastActive').set(
+                        firebase.database.ServerValue.TIMESTAMP
+                    );
+                }
                 
-                // Log to master logs
-                await database.ref('master_logs/admins/' + savedUID).set({
-                    createdAt: firebase.database.ServerValue.TIMESTAMP,
-                    action: 'admin_created'
-                });
+                currentUID = savedUID;
+                document.getElementById('uidDisplay').textContent = currentUID;
                 
-                showNotification('New Admin UID Generated!', 'success');
-            } else {
-                // Update last active
-                await database.ref('admins/' + savedUID + '/lastActive').set(
-                    firebase.database.ServerValue.TIMESTAMP
-                );
+                // Load data
+                loadAdminData();
+                setupRealtimeUpdates();
+                
+            } catch(error) {
+                console.error('UID init error:', error);
+                showError('Failed to initialize: ' + error.message);
             }
-            
-            currentUID = savedUID;
-            document.getElementById('uidDisplay').textContent = currentUID;
-            
-            // Load admin data
-            loadAdminData();
         }
         
         // ========== FEATURE SELECTION ==========
@@ -638,7 +738,7 @@
             item.addEventListener('click', function() {
                 const feature = this.getAttribute('data-feature');
                 
-                if(feature === 'basic') return; // Basic always selected
+                if(feature === 'basic') return;
                 
                 if(selectedFeatures.has(feature)) {
                     selectedFeatures.delete(feature);
@@ -654,8 +754,8 @@
         document.getElementById('generateBtn').addEventListener('click', generateLink);
         
         async function generateLink() {
-            if(!currentUID) {
-                showNotification('Please wait, UID not ready', 'error');
+            if(!isFirebaseReady || !currentUID) {
+                showNotification('Please wait for connection...', 'error');
                 return;
             }
             
@@ -668,16 +768,14 @@
             generateBtn.disabled = true;
             
             try {
-                // Generate unique link ID
                 const linkId = 'LINK_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 
-                // Get base URL
-                let baseUrl = window.location.href.replace('admin.html', 'track.html');
+                // Build track.html URL
+                let baseUrl = window.location.href.split('?')[0].replace('admin.html', 'track.html');
                 if(!baseUrl.includes('track.html')) {
-                    baseUrl = window.location.origin + '/track.html';
+                    baseUrl = window.location.origin + window.location.pathname.replace('admin.html', 'track.html');
                 }
                 
-                // Build features array
                 const features = Array.from(selectedFeatures);
                 
                 // Save to Firebase
@@ -690,9 +788,8 @@
                 
                 await database.ref('admins/' + currentUID + '/links/' + linkId).set(linkData);
                 
-                // Update total links count
-                const adminRef = database.ref('admins/' + currentUID);
-                await adminRef.update({
+                // Update count
+                await database.ref('admins/' + currentUID).update({
                     totalLinks: firebase.database.ServerValue.increment(1)
                 });
                 
@@ -705,21 +802,17 @@
                 
                 generatedLinkURL = baseUrl + '?' + params.toString();
                 
-                // Display
                 document.getElementById('generatedLink').textContent = generatedLinkURL;
                 
                 loadingDiv.classList.remove('show');
                 linkResult.classList.add('show');
                 generateBtn.disabled = false;
                 
-                showNotification('Link Generated Successfully!', 'success');
-                
-                // Reload links list
-                loadAdminData();
+                showNotification('✅ Link Generated Successfully!', 'success');
                 
             } catch(error) {
-                console.error('Error:', error);
-                showNotification('Error generating link: ' + error.message, 'error');
+                console.error('Generate error:', error);
+                showNotification('Error: ' + error.message, 'error');
                 loadingDiv.classList.remove('show');
                 generateBtn.disabled = false;
             }
@@ -733,13 +826,11 @@
                 const snapshot = await database.ref('admins/' + currentUID).once('value');
                 const data = snapshot.val() || {};
                 
-                // Update stats
                 document.getElementById('totalLinks').textContent = data.totalLinks || 0;
                 
                 let totalClicks = 0;
                 let totalVisitors = 0;
                 
-                // Load links
                 const linksList = document.getElementById('linksList');
                 linksList.innerHTML = '';
                 
@@ -759,13 +850,16 @@
                             `<span class="option-tag">${f.toUpperCase()}</span>`
                         ).join('');
                         
+                        const date = linkData.createdAt ? 
+                            new Date(linkData.createdAt).toLocaleDateString() : 'Unknown';
+                        
                         linkItem.innerHTML = `
                             <div class="link-id">${linkId}</div>
                             <div class="link-options">${optionsHtml}</div>
                             <div class="link-stats">
                                 <div class="stat">Clicks: <span class="stat-value">${linkData.clicks || 0}</span></div>
                                 <div class="stat">Visitors: <span class="stat-value">${visitorCount}</span></div>
-                                <div class="stat">Created: <span class="stat-value">${new Date(linkData.createdAt).toLocaleDateString()}</span></div>
+                                <div class="stat">Created: <span class="stat-value">${date}</span></div>
                             </div>
                         `;
                         
@@ -783,18 +877,34 @@
                 document.getElementById('totalVisitors').textContent = totalVisitors;
                 
             } catch(error) {
-                console.error('Error loading data:', error);
+                console.error('Load data error:', error);
             }
         }
         
-        // ========== UTILITY FUNCTIONS ==========
+        // ========== REALTIME UPDATES ==========
+        function setupRealtimeUpdates() {
+            if(!currentUID) return;
+            
+            database.ref('admins/' + currentUID + '/links').on('value', () => {
+                loadAdminData();
+            });
+        }
+        
+        // ========== UTILITIES ==========
         function copyLink() {
             if(!generatedLinkURL) return;
             
             navigator.clipboard.writeText(generatedLinkURL).then(() => {
-                showNotification('Link copied to clipboard!', 'success');
+                showNotification('📋 Link copied!', 'success');
             }).catch(() => {
-                showNotification('Failed to copy link', 'error');
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = generatedLinkURL;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('📋 Link copied!', 'success');
             });
         }
         
@@ -814,20 +924,8 @@
             }, 3000);
         }
         
-        // ========== REALTIME UPDATES ==========
-        function setupRealtimeUpdates() {
-            if(!currentUID) return;
-            
-            database.ref('admins/' + currentUID + '/links').on('value', (snapshot) => {
-                loadAdminData();
-            });
-        }
-        
-        // ========== INITIALIZATION ==========
-        document.addEventListener('DOMContentLoaded', async () => {
-            await initializeUID();
-            setupRealtimeUpdates();
-        });
+        // ========== START ==========
+        document.addEventListener('DOMContentLoaded', initFirebase);
     </script>
 </body>
 </html>
